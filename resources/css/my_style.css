@@ -1,3 +1,13 @@
 body {
     background-color: #c2cad6;
 }
+
+#teacher_form{
+    visibility: hidden;
+    height: 0px;
+}
+
+#student_form{
+    visibility: hidden;
+    height: 0px;
+}

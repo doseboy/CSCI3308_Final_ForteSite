@@ -56,17 +56,79 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" onclick="viewRegType('registration_type',0)" type="radio" name="regType" id="regTypeStudent" value="Student">
+                                <input class="form-check-input" onclick="viewRegType('student_form',1);viewRegType('teacher_form',0)" type="radio" name="regType" id="regTypeStudent" value="Student">
                                 <label class="form-check-label" for="regTypeStudent">
                                     Student
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="row" id="registration_type">
-
+                    <div id="teacher_form">
+                        <br>
+                        <div class="form-group">
+                            <label for="teacherBio">About You</label>
+                            <textarea class="form-control" rows="5" id="teacherBio"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="teacherInstrument1">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="teacherInstrument1" id="teacherInstrument1" placeholder="Instrument #1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="teacherInstrument2">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="teacherInstrument2" id="teacherInstrument2" placeholder="Instrument #2">
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="studentExperience" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Experience Level
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="studentExperience">
+                                <a class="dropdown-item" value="1">Novice</a>
+                                <a class="dropdown-item" value="2">Beginner</a>
+                                <a class="dropdown-item" value="3">Intermediate</a>
+                                <a class="dropdown-item" value="4">Advanced</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="student_form">
+                        <br>
+                        <div class="form-group">
+                            <label for="studentBio">About You</label>
+                            <textarea class="form-control" rows="5" id="studentBio"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="stuentInstrument1">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="studentInstrument1" id="studentInstrument1" placeholder="Instrument #1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="studentInstrument2">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="studentInstrument2" id="studentInstrument2" placeholder="Instrument #2">
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="studentExperience" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Experience Level
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="studentExperience">
+                                <a class="dropdown-item" value="1">Novice</a>
+                                <a class="dropdown-item" value="2">Beginner</a>
+                                <a class="dropdown-item" value="3">Intermediate</a>
+                                <a class="dropdown-item" value="4">Advanced</a>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
             </form>
         </div>
+        <script src="../../resources/js/my_scripts.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
+</html>
