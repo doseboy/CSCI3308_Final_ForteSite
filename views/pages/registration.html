@@ -50,7 +50,7 @@
                         <legend class="col-form-label col-sm-3 pt-0">Member Type</legend>
                         <div class="col-sm-9">
                             <div class="form-check">
-                                <input class="form-check-input" onclick="viewRegType('registration_type',1)" type="radio" name="regType" id="regTypeTeacher" value="Teacher" required>
+                                <input class="form-check-input" onclick="viewRegType('student_form',0);viewRegType('teacher_form',1)" type="radio" name="regType" id="regTypeTeacher" value="Teacher" required>
                                 <label class="form-check-label" for="regTypeTeacher">
                                     Teacher
                                 </label>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="row" id="registration_type">
-                        
+
                     </div>
                 </fieldset>
             </form>
