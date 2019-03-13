@@ -1,0 +1,134 @@
+--I suggest you run the tables, then the insets, then the queries, running the setup and queries together can throw an error
+
+--Begin Table Setup
+
+CREATE TABLE IF NOT EXISTS Users (
+  UsersID INT NOT NULL,
+  Users_Name VARCHAR(45) NOT NULL,
+  Users_Email VARCHAR(45) NOT NULL,
+  UsersPassword VARCHAR(45) NOT NULL,
+  Instrument_1 VARCHAR(45) NOT NULL,
+  Instrument_2 VARCHAR(45) NULL,
+  Instrument_3 VARCHAR(45) NULL,
+  PRIMARY KEY (UsersID)
+	);
+
+CREATE TABLE IF NOT EXISTS Teachers (
+  TeacherID INT NOT NULL,
+  Teacher_Name VARCHAR(45) NOT NULL,
+  Teacher_Email VARCHAR(45) NOT NULL,
+  TeacherPassword VARCHAR(45) NOT NULL,
+  Instrument_1 VARCHAR(45) NOT NULL,
+  Instrument_2 VARCHAR(45) NULL,
+  Instrument_3 VARCHAR(45) NULL,
+  Strikes INT NOT NULL,
+  ThumbsUp INT NULL,
+  PRIMARY KEY (TeacherID)
+  );
+
+
+CREATE TABLE IF NOT EXISTS Payments (
+  PaymentID INT NOT NULL,
+  Amount DECIMAL NULL,
+  Method_Used VARCHAR(45) NULL,
+  Payment_Date Date,
+  Users_UsersID INT NOT NULL,
+  Teachers_TeacherID INT NOT NULL,
+  PRIMARY KEY (PaymentID, Users_UsersID, Teachers_TeacherID),
+  CONSTRAINT fk_Payments_User1
+    FOREIGN KEY (Users_UsersID)
+    REFERENCES Users (UsersID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_Payments_Teachers1
+    FOREIGN KEY (Teachers_TeacherID)
+    REFERENCES Teachers (TeacherID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+
+CREATE TABLE IF NOT EXISTS Meetings (
+  MeetingID INT NOT NULL ,
+  Time TIME NULL,
+  Date DATE NULL,
+  Users_UsersID INT NOT NULL,
+  Teachers_TeacherID INT NOT NULL,
+  PRIMARY KEY (MeetingID, Users_UsersID, Teachers_TeacherID),
+  CONSTRAINT fk_Meetings_User
+    FOREIGN KEY (Users_UsersID)
+    REFERENCES Users (UsersID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_Meetings_Teachers1
+    FOREIGN KEY (Teachers_TeacherID)
+    REFERENCES Teachers (TeacherID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+--End Table Setup
+
+--Begin Sample Data
+
+INSERT INTO Users(UsersID, Users_Name, Users_Email, UsersPassword, Instrument_1, Instrument_2,Instrument_3)
+VALUES(1,'Joe Jackson', 'joe.jackson@gmail.com', 'jackjoe123', 'Trumpet', NULL,NULL),
+(2,'Sarah Marcus', 'Sar.Mar@gmail.com', 'SMAR321', 'Trumpet', NULL,NULL),
+(3,'Evan Samson', 'evsa7039@colorado.edu', 'smevans1598', 'Trombone', NULL,NULL),
+(4,'Sawyer Mack ', 'Smack.backup@gmail.com', 'prez1234', 'Flute', 'Piano',NULL),
+(5,'Alan Warder ', 'alan.mailbox@gmail.com', 'gobuffs', 'Alto Saxophone', NULL,NULL),
+(6,'Fred Frankerson', 'franky.frank@hotmail.com', 'frankrules', 'Violin', 'Cello',NULL)
+;
+
+INSERT INTO Teachers(TeacherID, Teacher_Name, Teacher_Email, TeacherPassword, Instrument_1, Instrument_2,Instrument_3,Strikes,ThumbsUp)
+VALUES(1,'Alan Paradise', 'Alan.Paradise@colorado.edu', 'Paradise123', 'Violin', 'Guitar',NULL,0,4),
+(2,'John Libby', 'libby123@cherrycreekschools.com', 'trumpettime', 'Trumpet', 'French Horn',NULL,0,3),
+(3,'Craige Westwood', 'westwood@hotmail.com', 'skaman123', 'Trombone', NULL,NULL,2,3)
+;
+
+
+INSERT INTO Users(UsersID, Users_Name, Users_Email, UsersPassword, Instrument_1, Instrument_2,Instrument_3)
+VALUES(1,'Joe Jackson', 'joe.jackson@gmail.com', 'jackjoe123', 'Trumpet', NULL,NULL),
+(2,'Sarah Marcus', 'Sar.Mar@gmail.com', 'SMAR321', 'Trumpet', NULL,NULL),
+(3,'Evan Samson', 'evsa7039@colorado.edu', 'smevans1598', 'Trombone', NULL,NULL),
+(4,'Sawyer Mack ', 'Smack.backup@gmail.com', 'prez1234', 'Flute', 'Piano',NULL),
+(5,'Alan Warder ', 'alan.mailbox@gmail.com', 'gobuffs', 'Alto Saxophone', NULL,NULL),
+(6,'Fred Frankerson', 'franky.frank@hotmail.com', 'frankrules', 'Violin', 'Cello',NULL)
+;
+
+INSERT INTO Payments(PaymentID, Amount, Method_Used, Payment_Date, Users_UsersID, Teachers_TeacherID)
+VALUES(1,55.00, 'Venmo', '2018-02-20',2, 2),
+(2,47.50, 'In App', '2018-6-30',3, 3),
+(3,60.10, 'In App', '2018-10-14',6, 1),
+(4,47.50, 'Venmo', '2019-02-03',3, 3);
+
+INSERT INTO Meetings(MeetingID, Time, Date, Users_UsersID, Teachers_TeacherID)
+VALUES(1,'13:10', '2019-03-20',3, 3),
+(2,'14:15', '2019-04-2',6, 1),
+(3,'12:00', '2019-04-15',1, 2);
+--End Sample Data
+
+--Begin Sample Queries 
+
+--Take a look at the full sample tables
+select * from Users ;
+select * from Teachers ;
+select * from Payments ;
+select * from Meetings ;
+
+--Just for fun here are some easy queries that could be used
+--In addition, joins could bring together any combination of the 4 tables to gather whatever info you wanted
+
+--Find which teachers has the most kudos
+select Teacher_Name, ThumbsUp from Teachers where ThumbsUp=(select max(ThumbsUp) from Teachers);
+
+--Find a teacher with the same primary instrument as a student, in this case User 3
+select Teacher_Name, Teacher_email,instrument_1 from Teachers where Instrument_1=(select Instrument_1 from Users where UsersID=3);
+
+--Look up all payments made to a the teacher Westwood
+select Amount, Payment_Date from Payments where teachers_teacherid = (select teacherid from Teachers where teacher_name='Craige Westwood')
+
+--Find what teachers have earned some strikes
+select TeacherID, Teacher_Name, strikes from Teachers where Strikes>0
+
+--End Sample Queries
+
+--Throw on a comment or email me if you have some suggestions or improvements you want
+--I think the only table remaining that is vital to the app would be the messages table
