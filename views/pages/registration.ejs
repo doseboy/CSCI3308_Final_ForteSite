@@ -1,0 +1,120 @@
+<% include ../partials/header %>
+	
+	<img src="../resources/img/forte_logo_7.jpg" class="img-fluid" alt="Registration Page Banner for Forte">
+    <br>
+        <br>
+        <br>
+        <div class="container">
+            <form action="home.html">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="firstName">First Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="firstName" id="fullName" placeholder="First Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="lastName">First Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="email">Email</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Email Address">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="password">Password</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="password" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="passwordConfirm">Confirm Password</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password">
+                    </div>
+                </div>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 pt-0">Member Type</legend>
+                        <div class="col-sm-9">
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="viewRegType('student_form',0);viewRegType('teacher_form',1)" type="radio" name="regType" id="regTypeTeacher" value="Teacher" required>
+                                <label class="form-check-label" for="regTypeTeacher">
+                                    Teacher
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="viewRegType('student_form',1);viewRegType('teacher_form',0)" type="radio" name="regType" id="regTypeStudent" value="Student">
+                                <label class="form-check-label" for="regTypeStudent">
+                                    Student
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="teacher_form">
+                        <br>
+                        <div class="form-group">
+                            <label for="teacherBio">About You</label>
+                            <textarea class="form-control" rows="5" id="teacherBio"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="teacherInstrument1">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="teacherInstrument1" id="teacherInstrument1" placeholder="Instrument #1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="teacherInstrument2">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="teacherInstrument2" id="teacherInstrument2" placeholder="Instrument #2">
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="studentExperience" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Experience Level
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="studentExperience">
+                                <a class="dropdown-item" value="1">Novice</a>
+                                <a class="dropdown-item" value="2">Beginner</a>
+                                <a class="dropdown-item" value="3">Intermediate</a>
+                                <a class="dropdown-item" value="4">Advanced</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="student_form">
+                        <br>
+                        <div class="form-group">
+                            <label for="studentBio">About You</label>
+                            <textarea class="form-control" rows="5" id="studentBio"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="stuentInstrument1">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="studentInstrument1" id="studentInstrument1" placeholder="Instrument #1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="studentInstrument2">Instrument #1</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="studentInstrument2" id="studentInstrument2" placeholder="Instrument #2">
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="studentExperience" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Experience Level
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="studentExperience">
+                                <a class="dropdown-item" value="1">Novice</a>
+                                <a class="dropdown-item" value="2">Beginner</a>
+                                <a class="dropdown-item" value="3">Intermediate</a>
+                                <a class="dropdown-item" value="4">Advanced</a>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+<% include ../partials/footer %>
