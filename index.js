@@ -43,6 +43,33 @@ app.get('/registration', function(req, res) {
     });
 });
 
+// Home Page
+app.get('/home', function(req, res) {
+    var name = 'select users_name from users where usersid = 3;';
+    var instrument = 'select instrument_1 from users where usersid = 3;';
+
+    db.task('get-user-info', task => {
+        return task.batch([
+            task.any(name),
+            task.any(instrument)
+        ]);
+    })
+    .then(info => {
+        res.render('pages/home',{
+            my_title: "Home Page",
+            name: info[0][0].users_name,
+            instrument: info[1][0].instrument_1
+        });
+
+    })
+    .catch(error => {
+        res.render('pages/home',{
+            my_title: "Home Page",
+            name: '',
+            instrument: ''
+        })
+    });
+});
 
 
 app.listen(3000);
