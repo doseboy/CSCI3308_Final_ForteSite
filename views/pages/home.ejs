@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<img src="../resources/img/forte_logo_7.jpg" class="img-fluid" alt="Registration Page Banner for Forte">
+  <div class="container">
+    <div class='row'>
+      <div class="col-4">
+        <p>Name:
+            <% if(name) { %>
+			    <%- name %>
+			<% } %>
+        </p>
+        <p>Instrument:
+          <%- instrument %>
+        </p>
+      </div>
+      <div class="col-8">
+
+      </div>
+    </div>
+  </div>
+
+
+<% include ../partials/footer %>
