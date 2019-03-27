@@ -1,5 +1,42 @@
 <% include ../partials/header %>
-<h1 class="mt-4">Student Dashboard</h1>
-<p class="lead mb-3">Welcome <%= name %></p>
-<a href="/logout" class="btn btn-secondary">Logout</a>
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1 class="text-center mb-3">Student Dashboard</h1>
+            <p class="text-center lead mb-3">Welcome <%= name %>!</p>
+            <h4>Upcoming Lessons</h4>
+            <ul class="list-group pre-scrollable">
+                <%
+                    if (upcoming) {
+                        var rows = '';
+                        upcoming.forEach((item) => {
+                            let teacherName = '';
+            
+                            teachers.forEach((data) => {
+                                if (data.id == item.teachers_teacherid) {
+                                    teacherName = data.name;
+                                }
+                            });
+
+                            let date = item.date.toString();
+                            let time = item.time.toString();
+                            console.log('Time: ');
+                            console.log(time);
+
+
+                            rows += '<li class="list-group-item">Date: ' + date.slice(0,16);
+                            rows += '</br>Time: ' + time.slice(0,5);
+                            rows += '</br>Teacher: ' + teacherName;
+                            rows += '</br><a href="/search" class="btn btn-outline-info">More Info</a>';
+                            rows += '</li>';
+                        }); %>
+                        <%- rows %>
+                <% } %>
+            </ul>
+        </br>
+            <a href="/search" class="btn btn-secondary btn-block">Teacher Search</a>
+            <a href="/logout" class="btn btn-primary btn-block">Logout</a>
+        </div>
+    </div>
+</div>
 <% include ../partials/footer %>
