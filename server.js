@@ -264,16 +264,73 @@ app.post('/registration', (req, res) => {
 
 // Student Dashboard
 app.get('/dashboard-student', (req, res) => {
-    res.render('pages/dashboard-student', {
-        my_title: 'Student Dashboard',
-        name: req.user.name
+    // Get Info
+    let upcomingLessons = 'select * from meetings where users_usersid = \'' + req.user.id + '\' order by date asc;';
+
+    db.task('get-upcoming-lessons', task => {
+        return task.batch([
+            task.any(upcomingLessons)
+        ]);
+    })
+    .then(info => {
+        // Get all teachers - need to optimize
+        let teachers = 'select id,name from users where type = \'teacher\';';
+
+        db.task('get-teachers', task => {
+            return task.batch([
+                task.any(teachers)
+            ]);
+        })
+        .then(data => {
+            res.render('pages/dashboard-student', {
+                my_title: 'Student Dashboard',
+                name: req.user.name,
+                upcoming: info[0],
+                teachers: data[0]
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
 });
 
+// Teacher Dashboard
 app.get('/dashboard-teacher', (req, res) => {
-    res.render('pages/dashboard-teacher', {
-        my_title: 'Teacher Dashboard',
-        name: req.user.name
+    // Get Info
+    let upcomingLessons = 'select * from meetings where teachers_teacherid = \'' + req.user.id + '\' order by date asc;';
+
+    db.task('get-upcoming-lessons', task => {
+        return task.batch([
+            task.any(upcomingLessons)
+        ]);
+    })
+    .then(info => {
+        // Get all students - need to optimize
+        let students = 'select id,name from users where type = \'student\';';
+
+        db.task('get-students', task => {
+            return task.batch([
+                task.any(students)
+            ]);
+        })
+        .then(data => {
+            res.render('pages/dashboard-teacher', {
+                my_title: 'Teacher Dashboard',
+                name: req.user.name,
+                upcoming: info[0],
+                teachers: data[0]
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
 });
 
