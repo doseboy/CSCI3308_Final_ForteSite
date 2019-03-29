@@ -68,6 +68,8 @@ app.get('/home', function(req, res) {
             name: '',
             instrument: ''
         })
+
+        console.log(error);
     });
 });
 
