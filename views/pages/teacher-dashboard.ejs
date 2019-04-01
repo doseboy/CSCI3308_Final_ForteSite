@@ -1,4 +1,5 @@
 <% include ../partials/header %>
+
 <div class="row mt-5">
         <div class="col-md-6 m-auto">
             <div class="card card-body">
@@ -12,19 +13,19 @@
                             var rows = '';
                             upcoming.forEach((item) => {
                                 let studentName = '';
-                
+
                                 teachers.forEach((data) => {
                                     if (data.id == item.users_usersid) {
                                         studentName = data.name;
                                     }
                                 });
-    
+
                                 let date = item.date.toString();
                                 let time = item.time.toString();
                                 console.log('Time: ');
                                 console.log(time);
-    
-    
+
+
                                 rows += '<li class="list-group-item">Date: ' + date.slice(0,16);
                                 rows += '</br>Time: ' + time.slice(0,5);
                                 rows += '</br>Student: ' + studentName;
@@ -40,4 +41,5 @@
             </div>
         </div>
     </div>
+    
 <% include ../partials/footer %>
