@@ -127,13 +127,13 @@ app.post('/login', (req, res, next) => {
     .then((data) => {
         if (data.type == 'student') {
             passport.authenticate('local', {
-                successRedirect: ('/dashboard-student'),
+                successRedirect: ('/student-dashboard'),
                 failureRedirect: '/login',
                 failureFlash: true
             })(req, res, next);
         } else {
             passport.authenticate('local', {
-                successRedirect: ('/dashboard-teacher'),
+                successRedirect: ('/teacher-dashboard'),
                 failureRedirect: '/login',
                 failureFlash: true
             })(req, res, next);
@@ -264,7 +264,7 @@ app.post('/registration', (req, res) => {
 
 
 // Student Dashboard
-app.get('/dashboard-student', (req, res) => {
+app.get('/student-dashboard', (req, res) => {
     // Get Info
     let upcomingLessons = 'select * from meetings where users_usersid = \'' + req.user.id + '\' order by date asc;';
 
@@ -283,7 +283,7 @@ app.get('/dashboard-student', (req, res) => {
             ]);
         })
         .then(data => {
-            res.render('pages/dashboard-student', {
+            res.render('pages/student-dashboard', {
                 my_title: 'Student Dashboard',
                 name: req.user.name,
                 upcoming: info[0],
@@ -300,7 +300,7 @@ app.get('/dashboard-student', (req, res) => {
 });
 
 // Teacher Dashboard
-app.get('/dashboard-teacher', (req, res) => {
+app.get('/teacher-dashboard', (req, res) => {
     // Get Info
     let upcomingLessons = 'select * from meetings where teachers_teacherid = \'' + req.user.id + '\' order by date asc;';
 
@@ -319,7 +319,7 @@ app.get('/dashboard-teacher', (req, res) => {
             ]);
         })
         .then(data => {
-            res.render('pages/dashboard-teacher', {
+            res.render('pages/teacher-dashboard', {
                 my_title: 'Teacher Dashboard',
                 name: req.user.name,
                 upcoming: info[0],
