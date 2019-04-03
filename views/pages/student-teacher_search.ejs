@@ -1,5 +1,84 @@
 <% include ../partials/header %>
 
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
+            <h1 class="text-center mb-3"><i class="fas fa-search"></i> Search</h1>
+            <div class="form-group">
+            <a href="/student-dashboard" class="btn btn-primary btn-block">Back To Dashboard</a>
+        </div>
+            <div class="form-group">
+                <label for="searchString-Name">Search By Name</label>
+                <input class="form-control" type="text" id="searchString-Name" onkeyup="filterListByName()"
+                    placeholder="Enter a name here...">
+            </div>
+            <div class="form-group">
+                <label for="searchString-Instrument">Search By Instrument</label>
+                <input class="form-control" type="text" id="searchString-Instrument" onkeyup="filterListByInstrument()"
+                    placeholder="Enter an instrument here...">
+            </div>
+            <div class="form-group">
+                <label for="userList">Results</label>
+                <ul id="userList" class="list-group pre-scrollable">
+                    <%
+                if (users) {
+                    var rows = '';
+                    users.forEach((item) => {
+                        
+                        rows += '<li class="list-group-item card card-body"><div class="row"><div class="col-md-9">Name: <a>' + item.name;
+                        rows += '</a></br>Instrument: <span>' + item.instrument;
+                        rows += '</span></div><div><a href="/student-teacher_profile_view" class="btn btn-outline-info">View Profile</a></div></div></li>';
 
+                    }); %>
+                    <%- rows %>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function filterListByName() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('searchString-Name');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("userList");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    function filterListByInstrument() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('searchString-Instrument');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("userList");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("span")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
 
 <% include ../partials/footer %>
