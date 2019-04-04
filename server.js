@@ -299,6 +299,29 @@ app.get('/student-dashboard', (req, res) => {
     });
 });
 
+// Search
+app.get('/student-teacher_search', (req, res) => {
+    let teacher = 'teacher';
+    
+    let allUsers = "select * from users where type = 'teacher' ORDER by name asc;";
+
+    db.task('get-all-users', task => {
+        return task.batch([
+            task.any(allUsers)
+        ]);
+    })
+    .then(info => {
+        console.log(req.user.instrument)
+        res.render('pages/student-teacher_search', {
+            my_title: 'Search',
+            users: info[0]
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+})
+
 // Teacher Dashboard
 app.get('/teacher-dashboard', (req, res) => {
     // Get Info
@@ -334,6 +357,7 @@ app.get('/teacher-dashboard', (req, res) => {
         console.log(err);
     });
 });
+
 
 // Logout
 app.get('/logout', (req, res) => {
