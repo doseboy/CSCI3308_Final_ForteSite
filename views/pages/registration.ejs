@@ -3,6 +3,7 @@
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
       <div class="card card-body">
+          <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
         <h1 class="text-center mb-3">
           <i class="fas fa-user-plus"></i> Register
         </h1>
@@ -34,7 +35,7 @@
             <label for="email">Email</label>
             <input
               type="email"
-              id="email"
+              id="to"
               name="email"
               class="form-control"
               placeholder="Enter Email"
@@ -82,9 +83,24 @@
                 value="teacher">
             <label class="form-check-label" for="exampleRadios2">Teacher</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Register
-          </button>
+
+          <script>
+            $(document).ready(function(){
+              var from,to,subject,text;
+              $("#send_email").click(function(){		
+                to=$("#to").val();		
+                $("#message").text("Sending E-mail...Please wait");
+                $.get("http://localhost:3000/send",{to:to},function(data){
+                  if(data=="sent")
+                  {
+                    $("#message").empty().html("<p>Email is been sent at "+to+" . Please check inbox !</p>");
+                  }
+                });
+              });
+            });
+            </script><br>
+            <button type="submit" class="btn btn-primary btn-block" id="send_email">Register</button>
+
         </form>
         <p class="lead mt-4">Have An Account? <a href="/login">Login</a></p>
       </div>
