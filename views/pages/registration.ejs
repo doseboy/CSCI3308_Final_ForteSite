@@ -34,7 +34,7 @@
             <label for="email">Email</label>
             <input
               type="email"
-              id="email"
+              id="to"
               name="email"
               class="form-control"
               placeholder="Enter Email"
@@ -82,9 +82,24 @@
                 value="teacher">
             <label class="form-check-label" for="exampleRadios2">Teacher</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Register
-          </button>
+
+          <script>
+            $(document).ready(function(){
+              var from,to,subject,text;
+              $("#send_email").click(function(){		
+                to=$("#to").val();		
+                $("#message").text("Sending E-mail...Please wait");
+                $.get("http://localhost:3000/send",{to:to},function(data){
+                  if(data=="sent")
+                  {
+                    $("#message").empty().html("<p>Email is been sent at "+to+" . Please check inbox !</p>");
+                  }
+                });
+              });
+            });
+            </script><br>
+            <button id="send_email">Send Email</button>
+
         </form>
         <p class="lead mt-4">Have An Account? <a href="/login">Login</a></p>
       </div>

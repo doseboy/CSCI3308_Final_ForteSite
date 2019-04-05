@@ -5,7 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
-
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -23,6 +23,12 @@ passport.use(
             if (!user) {
             console.log('Wrong email!');
             return done(null, false, { message: 'That email is not registered' });
+            }
+
+            //Check if user has verified their account via email
+            if(!user.verified){
+                console.log("Confirm Email to Login"); // User has not verified email
+                return done(null, false, { message: 'That email is not verified' });
             }
 
             // Match Password
@@ -45,6 +51,74 @@ passport.use(
         });
     
 }));
+
+// Configure Mail Server Responsible for Sending/Recieving Mail
+var smtpTransport = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: "forte.music.help@gmail.com",
+        pass: "Paradise1!"
+    }
+});
+var rand, mailOptions, host, link;
+
+// Begin Email Routing
+app.get('/send', function(req, res){
+    rand=Math.floor((Math.random() * 100) + 54);
+	host=req.get('host');
+	link="http://"+req.get('host')+"/verify?id="+rand;
+	mailOptions={
+        from: 'forte.music.help@gmail.com', //sender address
+		to : req.query.to, // Reciever
+		subject : "Please confirm your Email account",
+		html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"	
+	}
+	console.log(mailOptions);
+	smtpTransport.sendMail(mailOptions, function(error, response){
+   	 if(error){
+        	console.log(error);
+		res.end("error");
+	 }else{
+        	console.log("Message sent: " + response.message);
+		res.end("sent");
+         }
+    });
+});
+
+// Veritfy Email
+app.get('/verify',function(req,res){
+    console.log(req.protocol+":/"+req.get('host'));
+
+    if((req.protocol+"://"+req.get('host'))==("http://"+host))
+    {
+        console.log("Domain is matched. Information is from Authentic email");
+        if(req.query.id==rand)
+        {
+            // User's account updated in database to verified
+            console.log("email is verified");
+            res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
+
+            db.tx(v => {
+                return v.none('UPDATE users SET verified = $1 WHERE email = $2', [true, mailOptions.to]);
+            })
+            .then(data => {
+                //success
+            })
+            .catch(error =>{
+                console.log('ERROR:', error);
+            });
+        }
+        else
+        {
+            console.log("email is not verified");
+            res.end("<h1>Bad Request</h1>");
+        }
+    }
+    else
+    {
+        res.end("<h1>Request is from unknown source");
+    }
+});
 
 // Passport Serialize/Deserialize
 passport.serializeUser((user, done) => {
@@ -228,7 +302,7 @@ app.post('/registration', (req, res) => {
                     db.tx(t => {
                         console.log('Storing hashed password: ');
                         console.log(hashedPassword);
-                        return t.none('INSERT INTO Users(id, name, email, password, instrument, type, strikes, thumbsup) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+                        return t.none('INSERT INTO Users(id, name, email, password, instrument, type, strikes, thumbsup, verified) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
                         [
                             lastUserId,
                             name,
@@ -237,12 +311,13 @@ app.post('/registration', (req, res) => {
                             instrument,
                             userType,
                             0,
-                            0
+                            0,
+                            false
                         ])
                         .then(t => {
                             req.flash(
                                 'success_msg',
-                                'You are now registered and can log in'
+                                'Please log into your email to verify your account.'
                             );
                             res.redirect('/login');
                         })
