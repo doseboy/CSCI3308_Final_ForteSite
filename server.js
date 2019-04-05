@@ -199,19 +199,29 @@ app.post('/login', (req, res, next) => {
         return t.oneOrNone('SELECT type FROM users WHERE \'' + email + '\' = email;');
     })
     .then((data) => {
-        if (data.type == 'student') {
-            passport.authenticate('local', {
-                successRedirect: ('/student-dashboard'),
-                failureRedirect: '/login',
-                failureFlash: true
-            })(req, res, next);
-        } else {
-            passport.authenticate('local', {
-                successRedirect: ('/teacher-dashboard'),
-                failureRedirect: '/login',
-                failureFlash: true
-            })(req, res, next);
-        }
+         if (data == null) {
+                errors.push({ msg: 'Email is not registered' });
+                res.render('pages/login', {
+                    errors,
+                    email,
+                    password
+                });
+            } else if (data.type == 'student') {
+                passport.authenticate('local', {
+                    successRedirect: ('/student-dashboard'),
+                    failureRedirect: '/login',
+                    failureFlash: true
+                })(req, res, next);
+            } else {
+                passport.authenticate('local', {
+                    successRedirect: ('/teacher-dashboard'),
+                    failureRedirect: '/login',
+                    failureFlash: true
+                })(req, res, next);
+            }
+    })
+    .catch(err => {
+      console.log(err);
     });
 });
 
