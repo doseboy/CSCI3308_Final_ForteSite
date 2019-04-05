@@ -18,33 +18,33 @@ passport.use(
         db.tx(t => {
             return t.oneOrNone('SELECT * FROM users WHERE \'' + email + '\' = email;');
         })
-        .then((rows) => {
-            const user = rows;
-            if (!user) {
-            console.log('Wrong email!');
-            return done(null, false, { message: 'That email is not registered' });
-            }
-
-            // Match Password
-            bcrypt.compare(password, user.password, (err, isMatch) => {
-                if (err) {
-                    throw err;
+            .then((rows) => {
+                const user = rows;
+                if (!user) {
+                    console.log('Wrong email!');
+                    return done(null, false, { message: 'That email is not registered' });
                 }
 
-                if (isMatch) {
-                    console.log('Made it past username and password checks!');
-                    return done(null, user);
-                } else {
-                    console.log('Wrong password!');
-                    return done(null, false, { message: 'Password incorrect' });
-                }
+                // Match Password
+                bcrypt.compare(password, user.password, (err, isMatch) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if (isMatch) {
+                        console.log('Made it past username and password checks!');
+                        return done(null, user);
+                    } else {
+                        console.log('Wrong password!');
+                        return done(null, false, { message: 'Password incorrect' });
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log(error);
             });
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    
-}));
+
+    }));
 
 // Passport Serialize/Deserialize
 passport.serializeUser((user, done) => {
@@ -55,12 +55,12 @@ passport.deserializeUser((id, done) => {
     db.tx(t => {
         return t.one('SELECT * FROM users WHERE \'' + id + '\' = id;');
     })
-    .then((res) => {
-        done(null, res);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+        .then((res) => {
+            done(null, res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 });
 
 // Connect to Database
@@ -101,7 +101,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 // Body-parser
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 // Routes //
 
@@ -120,25 +120,41 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res, next) => {
-    const { email } = req.body;
+    const { email, password } = req.body;
+
+    let errors = [];
+
     db.tx(t => {
         return t.oneOrNone('SELECT type FROM users WHERE \'' + email + '\' = email;');
     })
-    .then((data) => {
-        if (data.type == 'student') {
-            passport.authenticate('local', {
-                successRedirect: ('/student-dashboard'),
-                failureRedirect: '/login',
-                failureFlash: true
-            })(req, res, next);
-        } else {
-            passport.authenticate('local', {
-                successRedirect: ('/teacher-dashboard'),
-                failureRedirect: '/login',
-                failureFlash: true
-            })(req, res, next);
-        }
-    });
+        .then((data) => {
+            console.log('Made it here!!!');
+            console.log(data);
+
+            if (data == null) {
+                errors.push({ msg: 'Email is not registered' });
+                res.render('pages/login', {
+                    errors,
+                    email,
+                    password
+                });
+            } else if (data.type == 'student') {
+                passport.authenticate('local', {
+                    successRedirect: ('/student-dashboard'),
+                    failureRedirect: '/login',
+                    failureFlash: true
+                })(req, res, next);
+            } else {
+                passport.authenticate('local', {
+                    successRedirect: ('/teacher-dashboard'),
+                    failureRedirect: '/login',
+                    failureFlash: true
+                })(req, res, next);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 });
 
 
@@ -156,7 +172,7 @@ app.post('/registration', (req, res) => {
         password,
         password2,
         userType
-        } = req.body;
+    } = req.body;
 
     let errors = [];
 
@@ -189,76 +205,76 @@ app.post('/registration', (req, res) => {
         db.tx(t => {
             return t.oneOrNone('SELECT * FROM users WHERE \'' + email + '\' = email;');
         })
-        .then((rows) => {
-            console.log(rows);
-            if (rows !== null) {
-                errors.push({ msg: 'Email already taken' });
-                res.render('pages/registration', {
-                    errors,
-                    name,
-                    instrument,
-                    email
-                });
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+            .then((rows) => {
+                console.log(rows);
+                if (rows !== null) {
+                    errors.push({ msg: 'Email already taken' });
+                    res.render('pages/registration', {
+                        errors,
+                        name,
+                        instrument,
+                        email
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
         // Store user in database
         console.log('Storing user!');
         db.tx(t => {
             return t.one('SELECT MAX(id) FROM users;');
         })
-        .then((data) => {
-            let lastUserId = data.max;
+            .then((data) => {
+                let lastUserId = data.max;
 
-            lastUserId++;
+                lastUserId++;
 
-            // Hash Password
-            bcrypt.genSalt(12, (err, salt) => {
-                bcrypt.hash(password, salt, (err, hash) => {
-                    if (err) throw err;
+                // Hash Password
+                bcrypt.genSalt(12, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
 
-                    // Set password to hashed version
-                    let hashedPassword = hash;
-                    console.log('Generated hashed password: ');
-                    console.log(hashedPassword);
-
-                    db.tx(t => {
-                        console.log('Storing hashed password: ');
+                        // Set password to hashed version
+                        let hashedPassword = hash;
+                        console.log('Generated hashed password: ');
                         console.log(hashedPassword);
-                        return t.none('INSERT INTO Users(id, name, email, password, instrument, type, strikes, thumbsup) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
-                        [
-                            lastUserId,
-                            name,
-                            email,
-                            hashedPassword,
-                            instrument,
-                            userType,
-                            0,
-                            0
-                        ])
-                        .then(t => {
-                            req.flash(
-                                'success_msg',
-                                'You are now registered and can log in'
-                            );
-                            res.redirect('/login');
+
+                        db.tx(t => {
+                            console.log('Storing hashed password: ');
+                            console.log(hashedPassword);
+                            return t.none('INSERT INTO Users(id, name, email, password, instrument, type, strikes, thumbsup) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+                                [
+                                    lastUserId,
+                                    name,
+                                    email,
+                                    hashedPassword,
+                                    instrument,
+                                    userType,
+                                    0,
+                                    0
+                                ])
+                                .then(t => {
+                                    req.flash(
+                                        'success_msg',
+                                        'You are now registered and can log in'
+                                    );
+                                    res.redirect('/login');
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
                         })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                            .catch((err) => {
+                                console.log(err);
+                            });
                     });
-                });
-            })  
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 });
 
@@ -273,36 +289,36 @@ app.get('/student-dashboard', (req, res) => {
             task.any(upcomingLessons)
         ]);
     })
-    .then(info => {
-        // Get all teachers - need to optimize
-        let teachers = 'select id,name from users where type = \'teacher\';';
+        .then(info => {
+            // Get all teachers - need to optimize
+            let teachers = 'select id,name from users where type = \'teacher\';';
 
-        db.task('get-teachers', task => {
-            return task.batch([
-                task.any(teachers)
-            ]);
-        })
-        .then(data => {
-            res.render('pages/student-dashboard', {
-                my_title: 'Student Dashboard',
-                name: req.user.name,
-                upcoming: info[0],
-                teachers: data[0]
-            });
+            db.task('get-teachers', task => {
+                return task.batch([
+                    task.any(teachers)
+                ]);
+            })
+                .then(data => {
+                    res.render('pages/student-dashboard', {
+                        my_title: 'Student Dashboard',
+                        name: req.user.name,
+                        upcoming: info[0],
+                        teachers: data[0]
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         })
         .catch((err) => {
             console.log(err);
         });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
 });
 
 // Search
 app.get('/student-teacher_search', (req, res) => {
     let teacher = 'teacher';
-    
+
     let allUsers = "select * from users where type = 'teacher' ORDER by name asc;";
 
     db.task('get-all-users', task => {
@@ -310,16 +326,16 @@ app.get('/student-teacher_search', (req, res) => {
             task.any(allUsers)
         ]);
     })
-    .then(info => {
-        console.log(req.user.instrument)
-        res.render('pages/student-teacher_search', {
-            my_title: 'Search',
-            users: info[0]
+        .then(info => {
+            console.log(req.user.instrument)
+            res.render('pages/student-teacher_search', {
+                my_title: 'Search',
+                users: info[0]
+            });
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
 })
 
 // Teacher Dashboard
@@ -332,30 +348,30 @@ app.get('/teacher-dashboard', (req, res) => {
             task.any(upcomingLessons)
         ]);
     })
-    .then(info => {
-        // Get all students - need to optimize
-        let students = 'select id,name from users where type = \'student\';';
+        .then(info => {
+            // Get all students - need to optimize
+            let students = 'select id,name from users where type = \'student\';';
 
-        db.task('get-students', task => {
-            return task.batch([
-                task.any(students)
-            ]);
-        })
-        .then(data => {
-            res.render('pages/teacher-dashboard', {
-                my_title: 'Teacher Dashboard',
-                name: req.user.name,
-                upcoming: info[0],
-                teachers: data[0]
-            });
+            db.task('get-students', task => {
+                return task.batch([
+                    task.any(students)
+                ]);
+            })
+                .then(data => {
+                    res.render('pages/teacher-dashboard', {
+                        my_title: 'Teacher Dashboard',
+                        name: req.user.name,
+                        upcoming: info[0],
+                        teachers: data[0]
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         })
         .catch((err) => {
             console.log(err);
         });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
 });
 
 
