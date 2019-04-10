@@ -1,0 +1,81 @@
+--For you guys using local copies of the database, here is the code if you want to add in scheduling to your local DBs
+--Its already in the existing one, though full on scheduling is not part of the app(yet).
+
+drop function findday;
+drop function schedCheck;
+drop function updateSchedule;
+drop function purgeTestSchedules;
+
+--Scheduling table uses bool arrays to track open days and hours
+CREATE TABLE IF NOT EXISTS schedules(
+  teachersId INT NOT NULL,
+  days BOOL[7] NOT NULL,
+  monday BOOL[12] NOT NULL,
+  tuesday BOOL[12] NOT NULL,
+  wednesday BOOL[12] NOT NULL,
+  thursday BOOL[12] NOT NULL,
+  friday BOOL[12] NOT NULL,	
+  saturday BOOL[12] NOT NULL,
+  sunday BOOL[12] NOT NULL);
+
+--This function is not very important
+--It returns a str of the first three letters of the day
+--Other functions not dependent on it, but I have for when I integrate 
+--scheduling into the website
+CREATE FUNCTION findday() RETURNS text as $$
+BEGIN
+RETURN SUBSTRING(timeofday(), 1, 3) AS ExtractString; 
+END; $$
+LANGUAGE PLPGSQL;
+
+--This is a helper function to determine if the schedule adder needs to update a existing schedule 
+--Or if it needs to make a new one
+CREATE FUNCTION schedCheck(checkid int) RETURNS int as $$
+BEGIN
+RETURN count(teachersid) from schedules where teachersid=checkid;
+END; $$
+LANGUAGE PLPGSQL;
+
+
+--This function will take the info from the sign on sheet and then update the schedules in the DB accordingly
+--Using func above to decide to insert or update values.
+CREATE FUNCTION updateSchedule(teachId integer,  NewDays BOOL[7] ,NMonday BOOL[12] ,NTuesday BOOL[12] ,NWednesday BOOL[12] ,
+  NThursday BOOL[12] ,NFriday BOOL[12], NSaturday BOOL[12] ,NSunday BOOL[12]) RETURNS bool as $$
+
+BEGIN 
+  IF schedCheck(teachID) > schedCheck(999999) THEN
+    RAISE NOTICE 'updating existing schedule...';																 
+  Update schedules set ( teachersId,days ,monday,tuesday,wednesday,thursday,friday ,saturday ,sunday )
+	= (teachID,NewDays,NMonday,NTuesday,NWednesday,NThursday,NFriday,NSaturday,NSunday)
+	where (teachId=(select teachersId from schedules));
+	
+	return 1;																 
+  END IF;										
+  IF schedCheck(teachID) = schedCheck(999999) THEN
+  RAISE NOTICE 'creating new schedule...';
+  insert into schedules( teachersId,days ,monday,tuesday,wednesday,thursday,friday ,saturday ,sunday )
+  values(teachID,NewDays,NMonday,NTuesday,NWednesday,NThursday,NFriday,NSaturday,NSunday);
+	return 1;							
+																	 
+  END IF;														 
+																	 
+END; $$
+LANGUAGE PLPGSQL;
+
+--This function wipes out all 'test schedules' you may put into the DB
+--Finds every schedule without a teacherID and removes it
+CREATE FUNCTION purgeTestSchedules() RETURNS bool as $$
+BEGIN 		
+Delete from schedules
+where teachersid NOT IN (select id from users);				
+return 1;																	 
+END; $$
+LANGUAGE PLPGSQL;
+	
+					
+--Try it yourself:					
+select purgeTestSchedules()			
+--Pick any IDs or bools you want					
+select updateSchedule(200,'{1,0,1,0,1,0,1}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}','{1,0,1,0,1,0,1,0,1,0,1,0}')
+--See your changes
+select * from schedules
