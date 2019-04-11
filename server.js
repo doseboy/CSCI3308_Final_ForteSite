@@ -452,6 +452,96 @@ app.get('/logout', (req, res) => {
 });
 
 
+// Teacher Availability
+app.get('/teacher_availability', (req, res) => {
+    let currentschedule = 'select * from schedules where teachersid = \'' + req.user.id + '\' ;';
+    db.task('get-schedule', task => {
+        return task.batch([
+            task.any(currentschedule)
+        ]);
+    })
+    .then(info => {
+            res.render('pages/teacher_availability', {
+                my_title: 'Teacher Scheduling',
+                name: req.user.name,
+                schedules:info[0]
+            });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
+
+app.post('/scheduleupdate', (req, res) => {
+    console.log('posting')
+    var { m,t,w,th,f,s,u,
+        m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,
+        t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,
+        w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,
+        th1,th2,th3,th4,th5,th6,th7,th8,th9,th10,th11,th12,
+        f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,
+        s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,
+        u1,u2,u3,u4,u5,u6,u7,u8,u9,u10,u11,u12
+        } = req.body;
+
+    var days=[m,t,w,th,f,s,u];
+    var mday=[m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12];
+    var tday=[t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12];
+    var wday=[w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12];
+    var thday=[th1,th2,th3,th4,th5,th6,th7,th8,th9,th10,th11,th12];
+    var fday=[f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12];
+    var sday=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12];
+    var uday=[u1,u2,u3,u4,u5,u6,u7,u8,u9,u10,u11,u12];
+
+    for (i = 0; i < 7; i++) { 
+        if (days[i]==undefined) {
+            days[i]=0;
+          }
+    }
+    for (i = 0; i < 12; i++) { 
+        if (mday[i]==undefined) {
+            mday[i]=0;
+          }
+        if (tday[i]==undefined) {
+            tday[i]=0;
+          }
+        if (wday[i]==undefined) {
+            wday[i]=0;
+          }
+        if (thday[i]==undefined) {
+            thday[i]=0;
+          }
+        if (fday[i]==undefined) {
+            fday[i]=0;
+          }
+        if (sday[i]==undefined) {
+            sday[i]=0;
+          }
+        if (uday[i]==undefined) {
+            uday[i]=0;
+          }
+    }
+
+    //console.log(m);
+    //console.log(days);    
+    //console.log(mday);     
+
+    console.log('Code for DB:')
+    console.log('select updateSchedule(' +req.user.id + ',\'{'+days+'}\',\'{'+mday+'}\',\'{'+tday+'}\',\'{'+wday+'}\',\'{'+thday+'}\',\'{'+fday+'}\',\'{'+sday+'}\',\'{'+uday+'}\')')
+
+    console.log('Storing Schedule');
+
+        db.tx(t => {
+            return t.any('select updateSchedule(' +req.user.id + ',\'{'+days+'}\',\'{'+mday+'}\',\'{'+tday+'}\',\'{'+wday+'}\',\'{'+thday+'}\',\'{'+fday+'}\',\'{'+sday+'}\',\'{'+uday+'}\');')
+        })
+            .then(t => {
+                res.redirect('/teacher_availability');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        
+});
 
 
 
