@@ -29,7 +29,7 @@
                                 rows += '<li class="list-group-item">Date: ' + date.slice(0,16);
                                 rows += '</br>Time: ' + time.slice(0,5);
                                 rows += '</br>Student: ' + studentName;
-                                rows += '</br><a href="/search" class="btn btn-outline-info">More Info</a>';
+                                rows += '</br><a href="/teacher-lesson_info/' + '?id=' + item.meetingid + '&time=' + time.slice(0,5) + '&student=' + studentName + '&date=' + date.slice(0,16) + '&name=' + name +'" class="btn btn-outline-info">More Info</a>';
                                 rows += '</li>';
                             }); %>
                             <%- rows %>

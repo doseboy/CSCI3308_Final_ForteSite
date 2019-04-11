@@ -384,6 +384,51 @@ app.get('/student-dashboard', (req, res) => {
     });
 });
 
+
+app.get('/student-lesson_info', (req, res) => {
+    // Get Info
+    //var id = req.params.id;
+    //res.send(req.query);
+    //let meeting = 'select * from meetings where meetingid =' + id + ';';
+
+    var check = req.query.name;
+
+    if(!check){
+        res.redirect('/student-dashboard');
+    }else{
+
+        res.render('pages/student-lesson_info', {
+            my_title: 'Student Lesson',
+            name: req.query.name,
+            date: req.query.date,
+            time: req.query.time,
+            id: req.query.id,
+            teacher: req.query.teacher,
+            user: req.user.id
+        })
+    }
+});
+
+//Student-Cancellation
+app.get('/student-lesson_cancel/:id', (req, res) => {
+    //res.send(req.params.id);
+    var id = req.params.id;
+    db.tx(t => {
+        console.log('Canceling meetings');
+        return t.none('DELETE from meetings where meetingid =' + id +';');
+    })
+    .then(t => {
+        req.flash(
+            'success on cancelation'
+        );
+        res.redirect('/student-dashboard');
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
+
+
 // Search
 app.get('/student-teacher_search', (req, res) => {
     let teacher = 'teacher';
@@ -443,6 +488,51 @@ app.get('/teacher-dashboard', (req, res) => {
     });
 });
 
+
+//Teacher Lesson Info
+
+app.get('/teacher-lesson_info', (req, res) => {
+    // Get Info
+    //var id = req.params.id;
+    //res.send(req.query);
+    //let meeting = 'select * from meetings where meetingid =' + id + ';';
+    var check = req.query.name;
+
+    if(!check){
+        res.redirect('/teacher-dashboard');
+    }
+    else{
+        res.render('pages/teacher-lesson_info', {
+            my_title: 'Teacher Lesson',
+            name: req.query.name,
+            date: req.query.date,
+            time: req.query.time,
+            id: req.query.id,
+            student: req.query.student,
+            user: req.user.id
+        })
+    }
+});
+
+//Teacher Cancellation
+
+app.get('/teacher-lesson_cancel/:id', (req, res) => {
+    //res.send(req.params.id);
+    var id = req.params.id;
+    db.tx(t => {
+        console.log('Canceling meetings');
+        return t.none('DELETE from meetings where meetingid =' + id +';');
+    })
+    .then(t => {
+        req.flash(
+            'success on cancelation'
+        );
+        res.redirect('/teacher-dashboard');
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
 
 // Logout
 app.get('/logout', (req, res) => {
