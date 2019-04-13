@@ -1,5 +1,18 @@
 <% include ../partials/header %>
 
+<script type="text/javascript">
+var clean_uri = location.protocol + "//" + location.host + location.pathname;
+/*
+var hash_pos = location.href.indexOf("#");
+if (hash_pos > 0) {
+    var hash = location.href.substring(hash_pos, location.href.length);
+    clean_uri += hash;
+}
+*/
+window.history.replaceState({}, document.title, clean_uri);
+</script>
+
+
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
         <div class="card card-body">
@@ -28,7 +41,7 @@
                         
                         rows += '<li class="list-group-item card card-body"><div class="row"><div class="col-md-9">Name: <a>' + item.name;
                         rows += '</a></br>Instrument: <span>' + item.instrument;
-                        rows += '</span></div><div><a href="/student-teacher_profile_view" class="btn btn-outline-info">View Profile</a></div></div></li>';
+                        rows += '</span></div><div><a button href="/student-teacherPV?id=' + item.id + '" class="btn btn-outline-info">View Profile</a></div></div></li>';
 
                     }); %>
                     <%- rows %>

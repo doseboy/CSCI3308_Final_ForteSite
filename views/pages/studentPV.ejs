@@ -1,0 +1,19 @@
+<% include ../partials/header %>
+
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+      <div class="card card-body">
+      	<h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
+       	<h1> <%= name %><small>Student</small></h1>
+        <h3> Instrument: <small><%= instrument %> </small></h3>
+        <h3> Bio: </h3>
+        <p> <%= aboutme %> </p>
+      </div>
+      <br>
+      <a class="btn btn-primary btn-block" href="/edit">Edit Profile</a>
+      <br>
+      <a class="btn btn-primary btn-block" href="/student-dashboard">Back to Dash</a>
+    </div>
+  </div>
+
+<% include ../partials/footer %> 
