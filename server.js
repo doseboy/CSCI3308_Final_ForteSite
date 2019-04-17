@@ -441,7 +441,8 @@ app.get('/student-teacher_search', (req, res) => {
         ]);
     })
     .then(info => {
-        console.log(req.user.instrument)
+        console.log(req.user);
+        console.log(req.user.instrument);
         res.render('pages/student-teacher_search', {
             my_title: 'Search',
             users: info[0]
@@ -633,7 +634,87 @@ app.post('/scheduleupdate', (req, res) => {
         
 });
 
+app.get('/edit', (req, res) => {
+    res.render('pages/edit', {
+        my_title: 'Edit Profile Page',
+        name: req.user.name,
+        instrument: req.user.instrument,
+        aboutme: req.user.aboutme,
+        type: req.user.type
+    });
+});
 
+app.post('/edit', function(req, res) {
+    const newName = req.body.name;
+    const newIns = req.body.instrument;
+    const newAboutme = req.body.aboutme;
+    db.tx('update-query', t => {
+        var yo = 'UPDATE users SET name = \'' + newName + '\', instrument = \'' + newIns + '\', aboutme = \'' + newAboutme + '\' WHERE id = \'' + req.user.id + '\';';
+        // var yo2 = 'UPDATE users SET instrument = \'' + newIns + '\' WHERE id = \'' + req.user.id + '\';';
+        // var yo3 = 'UPDATE users SET aboutme = \'' + newAboutme + '\' WHERE id = \'' + req.user.id + '\';';
+        var yo4 = 'SELECT type FROM users WHERE id = \'' + req.user.id + '\';';
+        
+
+        t.none(yo);
+        // t.none(yo2);
+        // t.none(yo3);
+        return t.one(yo4);
+    })
+    .then(bla => {//if successful update then render page again with name as new name
+        res.render('pages/edit', {
+            my_title: 'Edits were made',
+            name: newName,
+            instrument: newIns,
+            aboutme: newAboutme,
+            type: bla.type
+        });
+    })
+    .catch(err => {
+        console.log('update-query catch thew an error');
+        console.log(err);
+    });
+});
+
+app.get('/studentPV', (req, res) => {
+    res.render('pages/studentPV', {
+        my_title: 'Profile PageError: Could not find matching close tag for "<%".',
+        name: req.user.name,
+        instrument: req.user.instrument,
+        aboutme: req.user.aboutme
+    });
+});
+
+app.get('/teacherPV', (req, res) => {
+    res.render('pages/teacherPV', {
+        my_title: 'Profile Page',
+        name: req.user.name,
+        instrument: req.user.instrument,
+        aboutme: req.user.aboutme
+    });
+});
+
+app.get('/student-teacherPV', (req, res) => {
+    var id = req.query.id;
+    console.log(req.query);
+    db.tx('update-query', t => {
+        var oy = 'SELECT * FROM users where id =' + id + ';';
+        console.log(oy);
+        return t.one(oy);
+    })
+    .then(bla => {
+        res.render('pages/student-teacherPV', {
+            my_title: 'Profile Page',
+            id: bla.id,
+            name: bla.name,
+            instrument: bla.instrument,
+            aboutme: bla.aboutme
+        });
+    })
+    .catch(err => {
+        console.log('update-query catch thew an error');
+        console.log(err);
+    });
+});
 
 const PORT = process.env.PORT || 3000;
 
