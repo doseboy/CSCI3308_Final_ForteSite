@@ -6,6 +6,8 @@ const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 const nodemailer = require('nodemailer');
+const async = require('async');
+const crypto = require('crypto');
 
 const app = express();
 
@@ -36,7 +38,6 @@ passport.use(
                 if (err) {
                     throw err;
                 }
-
                 if (isMatch) {
                     console.log('Made it past username and password checks!');
                     return done(null, user);
@@ -61,64 +62,6 @@ var smtpTransport = nodemailer.createTransport({
     }
 });
 var rand, mailOptions, host, link;
-
-// Begin Email Routing
-app.get('/send', function(req, res){
-    rand=Math.floor((Math.random() * 100) + 54);
-	host=req.get('host');
-	link="http://"+req.get('host')+"/verify?id="+rand;
-	mailOptions={
-        from: 'forte.music.help@gmail.com', //sender address
-		to : req.query.to, // Reciever
-		subject : "Please confirm your Email account",
-		html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"	
-	}
-	console.log(mailOptions);
-	smtpTransport.sendMail(mailOptions, function(error, response){
-   	 if(error){
-        	console.log(error);
-		res.end("error");
-	 }else{
-        	console.log("Message sent: " + response.message);
-		res.end("sent");
-         }
-    });
-});
-
-// Veritfy Email
-app.get('/verify',function(req,res){
-    console.log(req.protocol+":/"+req.get('host'));
-
-    if((req.protocol+"://"+req.get('host'))==("http://"+host))
-    {
-        console.log("Domain is matched. Information is from Authentic email");
-        if(req.query.id==rand)
-        {
-            // User's account updated in database to verified
-            console.log("email is verified");
-            res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
-
-            db.tx(v => {
-                return v.none('UPDATE users SET verified = $1 WHERE email = $2', [true, mailOptions.to]);
-            })
-            .then(data => {
-                //success
-            })
-            .catch(error =>{
-                console.log('ERROR:', error);
-            });
-        }
-        else
-        {
-            console.log("email is not verified");
-            res.end("<h1>Bad Request</h1>");
-        }
-    }
-    else
-    {
-        res.end("<h1>Request is from unknown source");
-    }
-});
 
 // Passport Serialize/Deserialize
 passport.serializeUser((user, done) => {
@@ -225,6 +168,66 @@ app.post('/login', (req, res, next) => {
     });
 });
 
+// Begin Email Routing
+var rand, mailOptions, host, link;
+
+app.get('/send', function(req, res){
+    rand=Math.floor((Math.random() * 100) + 54);
+	host=req.get('host');
+	link="http://"+req.get('host')+"/verify?id="+rand;
+	mailOptions={
+        from: 'forte.music.help@gmail.com', //sender address
+		to : req.query.to, // Reciever
+		subject : "Please confirm your Email account",
+		html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"	
+	}
+	console.log(mailOptions);
+	smtpTransport.sendMail(mailOptions, function(error, response){
+   	 if(error){
+        	console.log(error);
+		res.end("error");
+	 }else{
+        	console.log("Message sent: " + response.message);
+		res.end("sent");
+         }
+    });
+});
+
+// Veritfy Email
+app.get('/verify',function(req,res){
+    console.log(req.protocol+":/"+req.get('host'));
+
+    if((req.protocol+"://"+req.get('host'))==("http://"+host))
+    {
+        console.log("Domain is matched. Information is from Authentic email");
+        if(req.query.id==rand)
+        {
+            // User's account updated in database to verified
+            console.log("email is verified");
+
+
+            db.tx(v => {
+                return v.none('UPDATE users SET verified = $1 WHERE email = $2', [true, mailOptions.to]);
+            })
+            .then(data => {
+                req.flash('success_msg', 'Email was successfully verified!');
+                return res.redirect('/login');
+            })
+            .catch(error =>{
+                console.log('ERROR:', error);
+            });
+        }
+        else
+        {
+            console.log("email is not verified");
+            res.end("<h1>Bad Request</h1>");
+        }
+    }
+    else
+    {
+        res.end("<h1>Request is from unknown source</h1>");
+    }
+});
 
 // Registration Page
 app.get('/registration', (req, res) => {
@@ -343,6 +346,197 @@ app.post('/registration', (req, res) => {
         })
         .catch((err) => {
             console.log(err);
+        });
+    }
+});
+
+// Forgot Password Email
+app.get('/forgot', function(req, res) {
+    res.render('pages/forgot', {
+      my_title: 'Reset Pasword'
+    });
+});
+
+app.post('/forgot', function(req, res, next) {
+    const { forgot } = req.body;
+    async.waterfall([
+      function(done) {
+        // Generate a unique, random reset token
+        crypto.randomBytes(20, function(err, buf) {
+          var token = buf.toString('hex');
+          return done(err, token);
+        });
+      },
+      function(token, done) {
+          db.tx(tkn => {
+              return tkn.one('SELECT * FROM users WHERE \'' + forgot + '\' = email;') 
+                .then(data =>{
+                    if(!data){
+                    req.flash('error_msg', 'No account exists with this email');
+                    return res.redirect('/forgot');
+                    }
+                    else{
+                    // Email verified --> Send link to reset password
+                    data.resetPasswordToken = token;
+                    data.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                    var mailOptions2 = {
+                        to: data.email,
+                        from: 'forte.music.help@gmail.com',
+                        subject: 'Password Reset',
+                        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                    };
+                    smtpTransport.sendMail(mailOptions2, function(err) {
+                        req.flash('success_msg', 'An e-mail has been sent to ' + mailOptions2.to + ' with further instructions.');
+                        done(err, 'done');
+                    });
+    
+                    console.log('Setting reset token');
+                    console.log(data.resetPasswordToken);
+                    console.log('Setting token expiration');
+                    console.log(data.resetPasswordExpires);
+                    return tkn.batch([
+                        tkn.none('UPDATE users SET reset_token = $1 WHERE email = $2', [data.resetPasswordToken, data.email]), 
+                        tkn.none('UPDATE users SET token_expires = $1 WHERE email = $2', [data.resetPasswordExpires, data.email])   
+                    ]);
+                }
+            })
+        })         
+        .catch(error =>{
+            console.log('ERROR:', error);
+            res.redirect('/forgot');
+            })
+        }
+    ],
+        function(err) {
+        if (err) return next(err);
+        res.redirect('/forgot');
+    });
+});
+
+// Reset Password Verificaiton
+
+// Verify Reset Link
+app.get('/reset/:token', function(req, res){
+    db.tx(chk => {
+        // Verify reset token
+        return chk.oneOrNone('SELECT * FROM users WHERE reset_token = $1 AND CAST(token_expires AS BIGINT)> $2', [req.params.token, Date.now()]);
+    })
+    .then(data=>{
+        // Link invalid if reset_token not verified
+        if(!data){
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/forgot');
+        }
+        else{
+            // Reset token verified --> render form to enter new password 
+            res.render('pages/reset', {email: data.email});
+        }
+    })
+    .catch(error =>{
+        console.log('ERROR', error);
+    })
+})
+
+// Reset Password After Verification
+app.post('/reset/:token', function(req, res) {
+
+    const {newPass1, newPass2, forgot_email}  = req.body;
+    let errors = [];
+
+    // check required fields
+    if (!newPass1 || !newPass2 || !forgot_email) {
+        errors.push({ msg: 'Please fill in all fields' });
+    }
+
+    // check passwords match
+    if (newPass1 !== newPass2) {
+        errors.push({ msg: 'Passwords did not match' });
+    }
+
+    // check password length
+    if (newPass1.length < 6) {
+        errors.push({ msg: 'Password should be at least 6 characters' });
+    }
+
+    // if there are errors, stay on page
+    if (errors.length > 0) {
+        res.render('pages/reset', {
+            errors,
+            newPass1,
+            newPass2,
+            forgot_email
+        });
+    } 
+    else {
+        async.waterfall([
+            function(done) {
+
+                db.tx(reset => { // Verify that email exists in the database
+                    return reset.oneOrNone('SELECT * FROM users WHERE email = $1', [forgot_email])
+                        .then(data=>{
+                            if(!data){
+                                req.flash('error', 'Could not find an account associated with that email.');
+                                return res.redirect('/forgot');
+                            }
+                            // Check again if user has a valid reset_token when button gets submitted, in case the token expired while on the 'reset' form
+                            else if(data.token_expires < Date.now() || data.reset_token == 0){
+                                req.flash('error', 'Invalid reset token.')
+                                return res.redirect('/forgot')
+                            }
+
+                            // Reset Token validated for the given user
+                            bcrypt.genSalt(12, (err, salt)=>{
+                                bcrypt.hash(newPass1, salt, (err, hash)=>{
+                                if (err) throw err;
+
+                                // Encrypt Password
+                                data.hashedPassword = hash;
+                                console.log('Generated new hashed password: ');
+                                console.log(data.hashedPassword);
+                                db.tx(reset=>{
+                                    // Store encrypted password, and reset the token & expiration time
+                                    return reset.batch([
+                                        reset.none('UPDATE users SET password = $1 WHERE email = $2',[data.hashedPassword, data.email]),
+                                        reset.none('UPDATE users SET reset_token = $1 WHERE email = $2', [0, data.email]), 
+                                        reset.none('UPDATE users SET token_expires = $1 WHERE email = $2', [0, data.email]) 
+                                    ])
+                                })
+                                // Send an email to notify user of changed password
+                                .then(d =>{
+                                    var mailOptions3 = {
+                                        to: data.email,
+                                        from: 'forte.music.help@gmail.com',
+                                        subject: 'Your password has been changed',
+                                        text: 'Hello,\n\n' +
+                                        'This is a confirmation that the password for your account ' + data.email + ' has just been changed.\n'
+                                    };
+                                    smtpTransport.sendMail(mailOptions3, function(err) {
+                                        req.flash('success_msg', 'Success! Your password has been changed.');
+                                        return res.redirect('/login');
+                                        done(err);
+                                    });
+                                    console.log('"Password Change" Email sent.');
+                                    console.log('Stored new password.');
+                                    console.log('Reset token and expiration time.');
+                                })
+                                .catch(error =>{
+                                    console.log('ERROR', error);
+                                })
+
+                                });
+                            });
+                        })
+                })
+                .catch(error =>{
+                    console.log('ERROR', error);
+                })
+            }
+        ], function(err) {
+            res.redirect('/');
         });
     }
 });
