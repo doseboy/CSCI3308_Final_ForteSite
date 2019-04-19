@@ -3,10 +3,10 @@
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
       <div class="card card-body">
-          <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
-        <h1 class="text-center mb-3">
+          <h1><img class="img-fluid" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+        <h3 class="text-center mb-3">
         Edit Your Profile
-        </h1>
+        </h3>
         <% include ../partials/messages %>
         <form method="POST">
             <div class="form-group">
@@ -19,7 +19,8 @@
                   placeholder="Enter Name"
                   value="<%= name %>"
                 />
-                <br>
+            </div>
+            <div class="form-group">
                 <label for="instrument">Instrument: </label>
                 <input
                   type="text"
@@ -29,7 +30,8 @@
                   placeholder="Enter Instrument"
                   value="<%= instrument %>"
                 />
-                <br>
+              </div>
+              <div class="form-group">
                 <label for="aboutme">About me: </label>
                 <textarea type="text"
                   id="aboutme"
@@ -38,18 +40,15 @@
                   placeholder="Enter Something About You"
                   ><%= aboutme %></textarea>
               </div>
-          <br>
-          <button type="submit" class="btn btn-primary btn-block" id="edit_profile">Change Password</button>
-          <br>
-          <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-          <br>
-        </form>
-        <% if(type == 'student') { %>
+          <button type="submit" class="btn btn-secondary btn-block" id="edit_profile">Change Password</button>
+          <button type="submit" class="btn btn-secondary btn-block">Save Changes</button>
+          <% if(type == 'student') { %>
             <a class="btn btn-primary btn-block" href="/studentPV">Back to Profile</a>
         <% }
           else { %>
             <a class="btn btn-primary btn-block" href="/teacherPV">Back to Profile</a>'
           <% } %>
+        </form>
       </div>
     </div>
   </div>

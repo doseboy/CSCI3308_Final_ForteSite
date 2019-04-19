@@ -3,8 +3,8 @@
 <div class="row mt-5">
         <div class="col-md-6 m-auto">
             <div class="card card-body">
-                    <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
-                <h1 class="text-center mb-3">Teacher Dashboard</h1>
+                    <h1><img class="img-fluid" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+                <h4 class="text-center mb-3">Teacher Dashboard</h4>
                 <p class="text-center lead mb-3">Welcome <%= name %>!</p>
                 <h4>Upcoming Lessons</h4>
                 <ul class="list-group pre-scrollable">
@@ -26,11 +26,11 @@
                                 console.log(time);
 
 
-                                rows += '<li class="list-group-item">Date: ' + date.slice(0,16);
+                                rows += '<li class="list-group-item card card-body"><div class="row"><div class="col-md-9">Date: ' + date.slice(0,16);
                                 rows += '</br>Time: ' + time.slice(0,5);
                                 rows += '</br>Student: ' + studentName;
-                                rows += '</br><a href="/teacher-lesson_info/' + '?id=' + item.meetingid + '&time=' + time.slice(0,5) + '&student=' + studentName + '&date=' + date.slice(0,16) + '&name=' + name +'" class="btn btn-outline-info">More Info</a>';
-                                rows += '</li>';
+                                rows += '</div><div><a href="/teacher-lesson_info/' + '?id=' + item.meetingid + '&time=' + time.slice(0,5) + '&student=' + studentName + '&date=' + date.slice(0,16) + '&name=' + name +'" class="btn btn-outline-info">More Info</a>';
+                                rows += '</div></div></li>';
                             }); %>
                             <%- rows %>
                     <% } %>
