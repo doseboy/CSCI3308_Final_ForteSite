@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
+            <% include ../partials/messages %>
+            <form action="/forgot" method="POST">
+                <div class="form-group">
+                    <label for="forgot">Enter Email for password reset:</label>
+                    <input
+                    type="email"
+                    id="forgot"
+                    name="forgot"
+                    class="form-control"
+                    placeholder="Enter Email"
+                    value="<%= typeof name != 'undefined' ? name : '' %>"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email</button>
+            </form> 
+        </div>
+ <% include ../partials/footer %>
