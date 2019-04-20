@@ -1,56 +1,53 @@
 <% include ../partials/header %>
 
 <script type="text/javascript">
-var clean_uri = location.protocol + "//" + location.host + location.pathname;
-/*
-var hash_pos = location.href.indexOf("#");
-if (hash_pos > 0) {
-    var hash = location.href.substring(hash_pos, location.href.length);
-    clean_uri += hash;
-}
-*/
-window.history.replaceState({}, document.title, clean_uri);
+    var clean_uri = location.protocol + "//" + location.host + location.pathname;
+    /*
+    var hash_pos = location.href.indexOf("#");
+    if (hash_pos > 0) {
+        var hash = location.href.substring(hash_pos, location.href.length);
+        clean_uri += hash;
+    }
+    */
+    window.history.replaceState({}, document.title, clean_uri);
 </script>
 
 
 
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-        <div class="card card-body">
-                <h1><img class="img-fluid" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
-            <h1 class="text-center mb-3">Teacher Lesson Information</h1>
-            <p class="text-center lead mb-3">Welcome <%= name %>!</p>
-            <h4 class="text-center">Meeting</h4>
-            <div class="card">
-                <ul class = "list-group list-group-flush">
-                    <li class="list-group-item">Date:   <%= date %></li>
-                    <li class="list-group-item">Time: <%= time %></li>
-                    <li class="list-group-item">Student: <%= student %></li>
-                    </br>
-                        <a href="/teacher-dashboard" class="btn btn-secondary btn-block">Dashboard</a>
-                    </br>
-                    <div class="text-center">
-                        <!-- Button HTML (to Trigger Modal) -->
-                        <a href="#myModal" class="btn btn-primary btn-block" data-toggle="modal">Cancel Lesson</a>
-                    </div>
 
-                 <div id="myModal" class="modal fade">
-                    <div class="modal-dialog modal-confirm">
-                        <div class="modal-content">
-                            <div class="modal-header">          
-                                <h4 class="modal-title">Are you sure?</h4>  
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Do you really want to cancel this lesson. There may be fees.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-                                <a button href="/teacher-lesson_cancel/<%= id %>" type="button" class="btn btn-primary">Delete</button></a>
-                            </div>
-                        </div>
+<div class="col-md-6 m-auto testPadding">
+    <div class="card card-body mainCard">
+        <h1><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+        <h4 class="text-center mb-3">Teacher Lesson Information</h4>
+        <h4 class="text-center">Meeting</h4>
+        <ul class="list-group">
+            <li class="list-group-item card card-body">Date: <%= date %>
+                <br>Time: <%= time %>
+                <br>Student: <%= student %></li>
+        </ul>
+        <br>
+
+        <!-- Button HTML (to Trigger Modal) -->
+        <a href="#myModal" class="btn btn-secondary btn-block" data-toggle="modal">Cancel Lesson</a>
+        <a href="/teacher-dashboard" class="btn btn-primary btn-block">Back To Dashboard</a>
+
+        <div id="myModal" class="modal fade">
+            <div class="modal-dialog modal-confirm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Are you sure?</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
-                </div>   
+                    <div class="modal-body">
+                        <p>Do you really want to cancel this lesson. There may be fees.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                        <a button href="/teacher-lesson_cancel/<%= id %>" type="button"
+                            class="btn btn-primary">Delete</button></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
