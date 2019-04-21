@@ -1,10 +1,10 @@
 <% include ../partials/header %>
 
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-      <div class="card card-body">
-          <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
-        <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>  Login</h1>
+
+    <div class="col-md-6 m-auto testPadding">
+      <div class="card card-body mainCard">
+          <h1><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+        <h4 class="text-center mb-3">Login</h4>
         <% include ../partials/messages %>
         <form action="/login" method="POST">
           <div class="form-group">
@@ -39,6 +39,5 @@
         </p>
       </div>
     </div>
-  </div>
 
   <% include ../partials/footer %>
