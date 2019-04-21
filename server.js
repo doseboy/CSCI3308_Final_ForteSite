@@ -38,6 +38,7 @@ passport.use(
                 if (err) {
                     throw err;
                 }
+
                 if (isMatch) {
                     console.log('Made it past username and password checks!');
                     return done(null, user);
@@ -908,6 +909,12 @@ app.get('/student-teacherPV', (req, res) => {
         console.log('update-query catch thew an error');
         console.log(err);
     });
+});
+
+app.get('/student-teacher_search:id', (req, res) => {
+	var teacherid = req.params.id;
+	console.log(req.params.id)
+	
 });
 
 const PORT = process.env.PORT || 3000;
