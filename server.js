@@ -6,6 +6,8 @@ const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 const nodemailer = require('nodemailer');
+const async = require('async');
+const crypto = require('crypto');
 
 const app = express();
 
