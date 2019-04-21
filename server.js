@@ -545,7 +545,7 @@ app.post('/reset/:token', function(req, res) {
 // Student Dashboard
 app.get('/student-dashboard', (req, res) => {
     // Get Info
-    let upcomingLessons = 'select * from meetings where users_usersid = \'' + req.user.id + '\' order by date asc;';
+    let upcomingLessons = 'select * from meetings where studentid = \'' + req.user.id + '\' order by date asc;';
 
     db.task('get-upcoming-lessons', task => {
         return task.batch([
@@ -650,7 +650,7 @@ app.get('/student-teacher_search', (req, res) => {
 // Teacher Dashboard
 app.get('/teacher-dashboard', (req, res) => {
     // Get Info
-    let upcomingLessons = 'select * from meetings where teachers_teacherid = \'' + req.user.id + '\' order by date asc;';
+    let upcomingLessons = 'select * from meetings where teacherid = \'' + req.user.id + '\' order by date asc;';
 
     db.task('get-upcoming-lessons', task => {
         return task.batch([
