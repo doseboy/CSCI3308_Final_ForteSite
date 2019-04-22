@@ -1,0 +1,36 @@
+<% include ../partials/header %>
+
+
+<div class="col-md-6 m-auto testPadding">
+  <div class="card card-body mainCard">
+    <h1><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+    <h4 class="text-center mb-3">Edit Your Profile</h4>
+    <% include ../partials/messages %>
+    <form method="POST">
+      <div class="form-group">
+        <label for="name">Name: </label>
+        <input type="name" id="name" name="name" class="form-control" placeholder="Enter Name" value="<%= name %>" />
+      </div>
+      <div class="form-group">
+        <label for="instrument">Instrument: </label>
+        <input type="text" id="instrument" name="instrument" class="form-control" placeholder="Enter Instrument"
+          value="<%= instrument %>" />
+      </div>
+      <div class="form-group">
+        <label for="aboutme">About me: </label>
+        <textarea type="text" id="aboutme" name="aboutme" class="form-control"
+          placeholder="Enter Something About You"><%= aboutme %></textarea>
+      </div>
+      <button type="submit" class="btn btn-secondary btn-block" id="edit_profile">Change Password</button>
+      <button type="submit" class="btn btn-secondary btn-block">Save Changes</button>
+      <% if(type == 'student') { %>
+      <a class="btn btn-primary btn-block" href="/studentPV">Back to Profile</a>
+      <% }
+          else { %>
+      <a class="btn btn-primary btn-block" href="/teacherPV">Back to Profile</a>
+      <% } %>
+    </form>
+  </div>
+</div>
+
+<% include ../partials/footer %>
