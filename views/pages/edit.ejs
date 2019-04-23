@@ -6,7 +6,7 @@
     <h1><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
     <h4 class="text-center mb-3">Edit Your Profile</h4>
     <% include ../partials/messages %>
-    <form method="POST">
+    <form action='/forgot' method="POST">
       <div class="form-group">
         <label for="name">Name: </label>
         <input type="name" id="name" name="name" class="form-control" placeholder="Enter Name" value="<%= name %>" />
