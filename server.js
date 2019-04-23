@@ -139,16 +139,16 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res, next) => {
     const { email } = req.body;
+    let errors = [];
     db.tx(t => {
         return t.oneOrNone('SELECT type FROM users WHERE \'' + email + '\' = email;');
     })
     .then((data) => {
+        console.log("Secret: " + data);
          if (data == null) {
                 errors.push({ msg: 'Email is not registered' });
                 res.render('pages/login', {
-                    errors,
-                    email,
-                    password
+                    errors
                 });
             } else if (data.type == 'student') {
                 passport.authenticate('local', {
