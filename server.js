@@ -917,6 +917,73 @@ app.get('/student-teacher_search:id', (req, res) => {
 	
 });
 
+
+
+//Booking
+app.get('/booking:id', (req, res) => {
+    var teacherid = req.params.id;
+    let currentschedule = 'select * from schedules where teachersid = \'' + teacherid + '\' ;';
+    let meetings = 'select * from meetings where teacherid = \'' + teacherid + '\' ;';
+
+    db.task('get-schedule', task => {
+        return task.batch([
+            task.any(currentschedule)
+        ]);
+    })
+    .then(info => {
+        //need to render teachid, so it can be passed back in the post
+            res.render('pages/booking', {
+                my_title: 'Booking',
+                name: req.user.name,
+                teachid:teacherid,
+                schedules:info[0]
+            });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
+
+
+app.post('/bookmeeting:teachid', (req, res) => {
+    //Its nteacherid because testing made it hard to tell which variable was breaking the teachid here or in booking
+    var nteacherid = req.params.teachid;
+    console.log('posting')
+    //Instead of the massive block of scheduling we don't need much to make a meeting
+    //However there is a good amount of messing with meetingdate to make a correct query
+    //As meeting date is in the form ('May 15, 2019') it needs to become ('2019-05-15')
+    var { meetinghour, meetingmonth, meetingdate} = req.body;
+    
+    //Logging in variables and query being sent to DB
+    console.log(meetinghour)
+    console.log(meetingmonth)
+    console.log(meetingdate)
+    console.log('Code for DB:')
+    console.log('insert into meetings(time,date,studentid,teachid,cancel) VALUES(\''+meetinghour+':00 \',\''+meetingdate.substring(meetingdate.length-4, meetingdate.length)+'-'+meetingmonth+'-'+meetingdate.substring(meetingdate.length-8, meetingdate.length-6)+'\','+req.user.id+','+nteacherid+',false);')
+    
+   //Small Example Query
+   //Note: primary key on meetings is auto incrementing now, don't try and insert a meetingid 
+   // insert into meetings(time,date,studentid,teacherid,cancel)
+   // Values('3:00','2019-04-20',3,2,false);    
+
+    console.log('Booking meeting....');
+
+        db.tx(t => {
+            return t.any('insert into meetings(time,date,studentid,teacherid,cancel) VALUES(\''+meetinghour+':00 \',\''+meetingdate.substring(meetingdate.length-4, meetingdate.length)+'-'+meetingmonth+'-'+meetingdate.substring(meetingdate.length-8, meetingdate.length-6)+'\','+req.user.id+','+nteacherid+',false);')
+
+        })
+            .then(t => {
+                //I'm redirecting to student dash so you can see your meetings once you book it.
+                res.redirect('/student-dashboard');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, console.log('Server started on port' + PORT));
