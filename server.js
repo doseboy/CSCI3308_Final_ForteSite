@@ -354,12 +354,13 @@ app.post('/registration', (req, res) => {
 // Forgot Password Email
 app.get('/forgot', function(req, res) {
     res.render('pages/forgot', {
-      my_title: 'Reset Pasword'
+      my_title: 'Reset Pasword',
+      loggedin: req.user
     });
 });
 
 app.post('/forgot', function(req, res, next) {
-    const { forgot } = req.body;
+    const forgot = req.body.email;
     async.waterfall([
       function(done) {
         // Generate a unique, random reset token
@@ -843,6 +844,7 @@ app.post('/edit', function(req, res) {
     const newName = req.body.name;
     const newIns = req.body.instrument;
     const newAboutme = req.body.aboutme;
+
     db.tx('update-query', t => {
         var yo = 'UPDATE users SET name = \'' + newName + '\', instrument = \'' + newIns + '\', aboutme = \'' + newAboutme + '\' WHERE id = \'' + req.user.id + '\';';
         // var yo2 = 'UPDATE users SET instrument = \'' + newIns + '\' WHERE id = \'' + req.user.id + '\';';
@@ -856,13 +858,69 @@ app.post('/edit', function(req, res) {
         return t.one(yo4);
     })
     .then(bla => {//if successful update then render page again with name as new name
-        res.render('pages/edit', {
-            my_title: 'Edits were made',
-            name: newName,
-            instrument: newIns,
-            aboutme: newAboutme,
-            type: bla.type
-        });
+        // if user_type = 'student' {
+        //     res.redirect('/studentPV');
+        // }
+        // else {
+        //     res.redirect('/teacherPV');
+        // }\
+        // res.render('pages/edit', {
+        //     my_title: 'Edits were made',
+        //     name: newName,
+        //     instrument: newIns,
+        //     aboutme: newAboutme,
+        //     type: bla.type
+        // });
+        res.redirect('/studentPV');
+    })
+    .catch(err => {
+        console.log('update-query catch thew an error');
+        console.log(err);
+    });
+});
+
+app.get('/edit2', (req, res) => {
+    res.render('pages/edit', {
+        my_title: 'Edit Profile Page',
+        name: req.user.name,
+        instrument: req.user.instrument,
+        aboutme: req.user.aboutme,
+        type: req.user.type
+    });
+});
+
+app.post('/edit2', function(req, res) {
+    const newName = req.body.name;
+    const newIns = req.body.instrument;
+    const newAboutme = req.body.aboutme;
+
+    db.tx('update-query', t => {
+        var yo = 'UPDATE users SET name = \'' + newName + '\', instrument = \'' + newIns + '\', aboutme = \'' + newAboutme + '\' WHERE id = \'' + req.user.id + '\';';
+        // var yo2 = 'UPDATE users SET instrument = \'' + newIns + '\' WHERE id = \'' + req.user.id + '\';';
+        // var yo3 = 'UPDATE users SET aboutme = \'' + newAboutme + '\' WHERE id = \'' + req.user.id + '\';';
+        var yo4 = 'SELECT type FROM users WHERE id = \'' + req.user.id + '\';';
+        
+
+        t.none(yo);
+        // t.none(yo2);
+        // t.none(yo3);
+        return t.one(yo4);
+    })
+    .then(bla => {//if successful update then render page again with name as new name
+        // if user_type = 'student' {
+        //     res.redirect('/studentPV');
+        // }
+        // else {
+        //     res.redirect('/teacherPV');
+        // }\
+        // res.render('pages/edit', {
+        //     my_title: 'Edits were made',
+        //     name: newName,
+        //     instrument: newIns,
+        //     aboutme: newAboutme,
+        //     type: bla.type
+        // });
+        res.redirect('/teacherPV');
     })
     .catch(err => {
         console.log('update-query catch thew an error');

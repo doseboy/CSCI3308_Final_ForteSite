@@ -6,7 +6,7 @@
     <h1><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
     <h4 class="text-center mb-3">Edit Your Profile</h4>
     <% include ../partials/messages %>
-    <form action='/forgot' method="POST">
+    <form method="POST">
       <div class="form-group">
         <label for="name">Name: </label>
         <input type="name" id="name" name="name" class="form-control" placeholder="Enter Name" value="<%= name %>" />
@@ -22,7 +22,7 @@
           placeholder="Enter Something About You"><%= aboutme %></textarea>
       </div>
       <button type="submit" class="btn btn-secondary btn-block" id="edit_profile" formaction= "/forgot">Change Password</button>
-      <button type="submit" class="btn btn-secondary btn-block" formaction= "/edit">Save Changes</button>
+      <button type="submit" class="btn btn-secondary btn-block" formaction= "/edit2">Save Changes</button>
       <% if(type == 'student') { %>
       <a class="btn btn-primary btn-block" href="/studentPV">Back to Profile</a>
       <% }

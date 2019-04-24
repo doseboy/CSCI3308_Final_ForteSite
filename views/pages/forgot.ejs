@@ -17,8 +17,13 @@
                     value="<%= typeof name != 'undefined' ? name : '' %>"
                     />
                 </div>
-                <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email</button>
-                <button type="submit" class="btn btn-secondary btn-block" id="send_email">Back to Login</button>
+                <% if(loggedin) { %>
+                    <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email Again</button>
+                <% }
+                    else { %>
+                    <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email Again</button>
+                <% } %>
+                <button type="submit" class="btn btn-secondary btn-block" id="send_email" formaction= "/login">Back to Login</button>
             </form> 
         </div>
  <% include ../partials/footer %>
