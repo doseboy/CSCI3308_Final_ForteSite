@@ -354,12 +354,13 @@ app.post('/registration', (req, res) => {
 // Forgot Password Email
 app.get('/forgot', function(req, res) {
     res.render('pages/forgot', {
-      my_title: 'Reset Pasword'
+      my_title: 'Reset Pasword',
+      loggedin: req.user
     });
 });
 
 app.post('/forgot', function(req, res, next) {
-    const { forgot } = req.body;
+    const forgot = req.body.email;
     async.waterfall([
       function(done) {
         // Generate a unique, random reset token
