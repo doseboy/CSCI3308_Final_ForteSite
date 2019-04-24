@@ -6,7 +6,7 @@ body, html {
     background-image: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img(20).jpg");
   
     /* Full height */
-    height: 100%;
+    height: auto;
   
     /* Center and scale the image nicely */
     background-position: center;
@@ -16,6 +16,7 @@ body, html {
 
   .testPadding {
     padding-top: 30px;
+    padding-bottom: 500px;
   }
 
   .mainCard {
