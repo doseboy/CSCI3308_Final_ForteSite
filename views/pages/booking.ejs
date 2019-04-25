@@ -406,10 +406,7 @@
 <br><br>
 
 <script>
-
 var weekcounter=0
-
-
 //helper function to count num of digits
 function getlength(number) {
     return number.toString().length;
@@ -420,10 +417,8 @@ function changedate(date, days) {
   result.setDate(result.getDate() + days);
   return result;
 }
-
 //Toggle is changed a lot from teacher scheduling
 //Instead of toggling one of many values, it sets all the required values to make the meeting when a time is selected
-
 function toggle(id){
     var week= ['m','t','w','th','f','s','u']
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -431,7 +426,6 @@ function toggle(id){
     var dti=['date_1','date_2','date_3','date_4','date_5','date_6','date_7']
     
     document.getElementById("createB").disabled = false;
-
     //special case for th because substrings are set back by 1 (all other days are set to one letter) 
     //Given a lot of time you could make every th an h to get around this, but for now this gets around any issue it could cause    
     if (id.substring(0, 2)=='th'){
@@ -465,7 +459,6 @@ console.log(document.getElementById('meetingdate').value)
 console.log("Meeting Month:")
 console.log(document.getElementById('meetingmonth').value)
 }
-
 //Turns schedule true/false inputs into 1s and 0s
 function getBool(string){
     var bools = [];
@@ -486,7 +479,6 @@ function getBool(string){
     } 
     return bools;
 }
-
 //Booking version of fillSchedule also fills in the current dates
 function fillSchedule_Booking(){
 var days=getBool(di.innerHTML);
@@ -498,7 +490,6 @@ var ls=['low_1','low_2','low_3','low_4','low_5','low_6','low_7']
 var hrs=['7am','8am','9am','10am','11am','12am','1pm','2pm','3pm','4pm','5pm','6pm']
 var dayhrs=[getBool(mi.innerHTML),getBool(ti.innerHTML),getBool(wi.innerHTML),getBool(thi.innerHTML),getBool(fi.innerHTML),getBool(si.innerHTML),getBool(ui.innerHTML)]
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
 console.log('Setting Dates...')   
 document.getElementById("createB").disabled = true;
 //A few date variables for filling out the dates
@@ -510,14 +501,12 @@ var weekh=new Date();
 var daynum=d.getDay();
 //console.log('getdayis')
 //console.log(d.getDay())
-
 //JS uses the week [sunday, monday,....] while we use [monday, tuesday,...] so need to adjust the getDay value to fit our model
 if (daynum==0){
 //console.log('caught sunday')
 daynum=6;}
 else{
 daynum=daynum-1}
-
 console.log('daynum')
 console.log(daynum)
 //console.log('tempd')
@@ -525,12 +514,9 @@ console.log(daynum)
 //console.log(changedate(tempd, 6),)
 //console.log(changedate(tempd, daynum),)
 //console.log(changedate(tempd, i-daynum),)
-
-
 weekl=changedate(tempd, -daynum)
 weekh=changedate(tempd, 6-daynum)
 document.getElementById('weekdates').innerHTML= months[weekl.getMonth()] + ' '+weekl.getDate()+', '+weekl.getFullYear() + ' - ' +months[weekh.getMonth()] + ' '+weekh.getDate()+', '+weekh.getFullYear();
-
 for (i = 0; i < 7; i++) { 
 console.log(tempd)
 tempd2=changedate(tempd, i-daynum)
@@ -544,11 +530,9 @@ console.log(tempd2)
         document.getElementById(dti[i]).innerHTML= months[tempd2.getMonth()] + ' 0'+tempd2.getDate()+', '+tempd2.getFullYear() ;
     }
 }
-
 //Same as Teacher Scheduling
 console.log('Filling Schedule...')    
 for (i = 0; i < 7; i++) { 
-
    if (days[i]==1) {
     document.getElementById(is[i]).src="/images/Play.png";   
     document.getElementById(hs[i]).innerHTML="Teaching";
@@ -564,7 +548,6 @@ for (i = 0; i < 7; i++) {
     else{
     document.getElementById(is[i]).src="/images/Rest.png";   
     document.getElementById(hs[i]).innerHTML="Rest Day";
-
     for (j = 0; j < 12; j++){
         var wid = week[i]+(j+1);
         document.getElementById(wid).disabled = true;
@@ -573,8 +556,6 @@ for (i = 0; i < 7; i++) {
 }
 console.log('ScheduleFilled')
 }
-
-
 //For comments on date function go to fillschedule_booking function
 function weekchange(weekchange){
 var week= ['m','t','w','th','f','s','u']
@@ -586,27 +567,21 @@ var tempd2=new Date();
 var weekl=new Date();
 var weekh=new Date();
 var daynum=d.getDay();
-
 if (daynum==0){
 daynum=6;}
 else{
 daynum=daynum-1}
-
 weekcounter=weekcounter + weekchange
 console.log('weekcounter')
 console.log(weekcounter)
-
 daynum=daynum+(7*weekcounter)
-
 weekl=changedate(tempd, -daynum)
 weekh=changedate(tempd, 6-daynum)
 document.getElementById('weekdates').innerHTML= months[weekl.getMonth()] + ' '+weekl.getDate()+', '+weekl.getFullYear() + ' - ' +months[weekh.getMonth()] + ' '+weekh.getDate()+', '+weekh.getFullYear();
-
 for (i = 0; i < 7; i++) { 
 console.log(tempd)
 tempd2=changedate(tempd, i-daynum)
 console.log(tempd2)
-
     if( getlength(tempd2.getDate())==2){
         document.getElementById(dti[i]).innerHTML= months[tempd2.getMonth()] + ' '+tempd2.getDate()+', '+tempd2.getFullYear() ;
     }
@@ -615,7 +590,6 @@ console.log(tempd2)
     }
 }
 }
-
 window.onload=fillSchedule_Booking();
 </script>
 

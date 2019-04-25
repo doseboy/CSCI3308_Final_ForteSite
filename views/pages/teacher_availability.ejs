@@ -1,35 +1,10 @@
 <% include ../partials/header %>
-
-<div class="col-md-1 m-auto" style="height: 0px;">
-        <div class="card card-body">
-                <ul id="ScheduleInfo" style="height: 0px;" class="list-group pre-scrollable">
-                        <%
-                    if (schedules) {
-                        var rows = '';
-                        schedules.forEach((item) => {
-                            rows += ' <p id="teachid">' + item.teachersid;
-                            rows += ' <p id="di">' + item.days;
-                            rows += ' <p id="mi">' + item.monday;
-                            rows += ' <p id="ti">' + item.tuesday;
-                            rows += ' <p id="wi">' + item.wednesday;
-                            rows += ' <p id="thi">' + item.thursday;
-                            rows += ' <p id=fi>' + item.friday;
-                            rows += ' <p id=si>' + item.saturday;
-                            rows += ' <p id=ui>' + item.sunday;
-                        }); %>
-                        <%- rows %>
-                        <% } %>
-                    </ul>
-        </div>
-    </div>
-
-<div class="row-2">
-</div>
+<div class="col-md-3 m-auto"></div>
 <div class="card card-body mainCard">
     <h3><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h3>
-    <h3 id="greeting" class="p" style="text-align:center">Welcome <%= name %> to your Scheduling Page</h3>
+    <h3 id="greeting" class="p" style="text-align:center">Scheduling Page</h3>
 </div>
-
+</div>
 <br>
 
 
