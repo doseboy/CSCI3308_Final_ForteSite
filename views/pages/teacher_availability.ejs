@@ -50,10 +50,9 @@
                     <p id="low_1" class="p" style="text-align:center"></p> 
             </div>
         
-            <div id="mondayCard" style="width:100%">
+            <div id="mondayCard" style="width:120%">
                 <div class="my-auto">
-                Monday <input type="checkbox" name="m" id="m" value=0 onclick=toggle(id)>
-                <br>
+                <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="m" id="m" value=0 onclick=toggle(id)>
                 <div class = "card-body row">
                         <div class ="col-md-2"></div>
                     
@@ -93,10 +92,10 @@
                 <p id="high_2" class="p" style="text-align:center">Rest Day</p>
                 <p id="low_2" class="p" style="text-align:center"></p>
             </div>
-            <div id="tuesdayCard" style="width:100%">
+            <div id="tuesdayCard" style="width:120%">
                 <div class="my-auto">
-                Tuesday <input type="checkbox" name="t" id="t" value=0 onclick=toggle(id)>
-                <br>
+                <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="t" id="t" value=0 onclick=toggle(id)>
+            
                 <div class = "card-body row">
                         <div class ="col-md-2"></div>
                     
@@ -136,10 +135,9 @@
                     <p id="high_3" class="p" style="text-align:center">Rest Day</p>
                     <p id="low_3" class="p" style="text-align:center"></p>
                 </div>
-                <div id="wednesdayCard" style="width:100%">
+                <div id="wednesdayCard" style="width:120%">
                     <div class="my-auto">
-                        Wednesday <input type="checkbox" name="w" id="w" value=0 onclick=toggle(id)>
-                        <br>
+                        <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="w" id="w" value=0 onclick=toggle(id)>
                         <div class = "card-body row">
                                 <div class ="col-md-2"></div>
                             
@@ -178,10 +176,9 @@
                     <p id="high_4" class="p" style="text-align:center">Rest Day</p>
                     <p id="low_4" class="p" style="text-align:center"></p>
                 </div>
-                <div id="thursdayCard" style="width:100%">
+                <div id="thursdayCard" style="width:120%">
                     <div class="my-auto">
-                        Thursday <input type="checkbox" name="th" id="th" value=0 onclick=toggle(id)>
-                        <br>
+                        <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="th" id="th" value=0 onclick=toggle(id)>
                         <div class = "card-body row">
                                 <div class ="col-md-2"></div>
                             
@@ -220,10 +217,9 @@
                         <p id="high_5" class="p" style="text-align:center">Rest Day</p>
                         <p id="low_5" class="p" style="text-align:center"></p>
                     </div>
-                    <div id="fridayCard" style="width:100%">
+                    <div id="fridayCard" style="width:120%">
                             <div class="my-auto">
-                                Friday <input type="checkbox" name="f" id="f" value=0 onclick=toggle(id)>
-                                <br>
+                                <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="f" id="f" value=0 onclick=toggle(id)>
                                 <div class = "card-body row">
                                         <div class ="col-md-2"></div>
                                     
@@ -262,10 +258,9 @@
                         <p id="high_6" class="p" style="text-align:center">Rest Day</p>
                         <p id="low_6" class="p" style="text-align:center"></p>
                     </div>
-                        <div id="saturdayCard" style="width:100%">
+                        <div id="saturdayCard" style="width:120%">
                                 <div class="my-auto">
-                                Saturday <input type="checkbox" name="s" id="s" value=0 onclick=toggle(id)>
-                                    <br>
+                                <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="s" id="s" value=0 onclick=toggle(id)>
                                     <div class = "card-body row">
                                             <div class ="col-md-2"></div>
                                         
@@ -305,11 +300,11 @@
                         <p id="low_7" class="p" style="text-align:center"></p>
                     </div>
                     </ul>
-                        <div id="sundayCard" style="width:100%">
+                        <div id="sundayCard" style="width:120%">
                                 <div class="my-auto">
-                                Sunday <input type="checkbox" name="u" id="u" value=0 onclick=toggle(id)>
-                                <br>
+                                <input type="checkbox" style="opacity:0; position:absolute; left:9999px;" name="u" id="u" value=0 onclick=toggle(id)>
                                 <div class = "card-body row">
+                                    
                                         <div class ="col-md-2"></div>
                                     
                                         <div class ="col" >
@@ -368,6 +363,25 @@
 <script>
 
 
+function setdays(){
+var tempvalue=0
+var week= ['m','t','w','th','f','s','u']
+for (i = 0; i < 7; i++) { 
+    tempvalue=0
+    for (j = 0; j < 12; j++){
+        if (document.getElementById(week[i]+(j+1)).value>0){
+            tempvalue = 1;
+        }
+     }
+     if (tempvalue>0){
+        console.log('day active:')
+        console.log(week[i])
+        document.getElementById(week[i]).value = 1;
+        document.getElementById(week[i]).checked = true;
+        console.log(document.getElementById(week[i]).value)
+     }
+}
+} 
 
 
 function toggle(id){
@@ -378,6 +392,7 @@ function toggle(id){
     else{
         document.getElementById(id).value=0
     }
+    setdays()
 }
 
 
@@ -417,10 +432,10 @@ for (i = 0; i < 7; i++) {
 
    if (days[i]==1) {
     document.getElementById(is[i]).src="/images/Play.png";   
-    document.getElementById(hs[i]).innerHTML="Teaching at";
+    document.getElementById(hs[i]).innerHTML="Teaching";
     for (j = 0; j < 12; j++){
         if (dayhrs[i][j]==1){
-        document.getElementById(ls[i]).innerHTML+=hrs[j]+'  ';
+        //document.getElementById(ls[i]).innerHTML+=hrs[j]+'  ';
 
         var wid = week[i]+(j+1);
         document.getElementById(wid).checked = true;
@@ -443,3 +458,4 @@ window.onload=fillSchedule();
 </script>
 
 <% include ../partials/footer %>
+
