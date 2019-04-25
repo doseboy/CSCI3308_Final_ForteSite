@@ -1,6 +1,6 @@
 <% include ../partials/header %>
 
-<div class="col-md-2 m-auto" style="height: 0px;">
+<div class="col-md-2 m-auto" style="opacity:0; position:absolute; left:9999px;">
         <div class="card card-body">
                 <ul id="ScheduleInfo" style="height: 0px;" class="list-group pre-scrollable">
                         <%
@@ -551,7 +551,7 @@ for (i = 0; i < 7; i++) {
 
    if (days[i]==1) {
     document.getElementById(is[i]).src="/images/Play.png";   
-    document.getElementById(hs[i]).innerHTML="Teaching at";
+    document.getElementById(hs[i]).innerHTML="Teaching";
     for (j = 0; j < 12; j++){
         if (dayhrs[i][j]==1){
         }
