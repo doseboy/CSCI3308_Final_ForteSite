@@ -360,7 +360,7 @@ app.get('/forgot', function(req, res) {
 });
 
 app.post('/forgot', function(req, res, next) {
-    const forgot = req.body.email;
+    const forgot = req.body.forgot;
     async.waterfall([
       function(done) {
         // Generate a unique, random reset token
