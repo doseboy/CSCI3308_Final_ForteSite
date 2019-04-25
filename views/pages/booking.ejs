@@ -27,9 +27,9 @@
 <div class="row-2">
 </div>
 <div class="col-md-3 m-auto">
-        <div class="card card-body mainCard" >
+        <div class="card card-body">
             <h3><img class="img-fluid center testTrans" src="/images/forteShortLogo.png" alt="LogoPic"></h3>
-            <h4 id="greeting" class="p" style="text-align:center">Book a Lesson</h4>
+            <h4 id="greeting" class="p" style="text-align:center">Welcome <%= name %> to Booking</h4>
         </div>
     </div>
 <br>
@@ -69,7 +69,7 @@
                     <img id="image_1" class="img-fluid" src="/images/Rest.png" alt="Today's Weather Icon">
                     <p id="icon_1" class="h4" style="text-align:center">Monday</p>
                     <p id="high_1" class="p" style="text-align:center">Rest Day</p>
-                    <p id="low_1" class="p" style="text-align:center">&nbsp;</p> 
+                    <p id="low_1" class="p" style="text-align:center"></p> 
             </div>
             <div id="mondayCard" style="width:120%">
                 <div class="my-auto">
@@ -112,7 +112,7 @@
                 <img id="image_2" class="img-fluid" src="/images/Rest.png" alt="Today's Weather Icon">
                 <p id="icon_2" class="h4" style="text-align:center">Tuesday</p>
                 <p id="high_2" class="p" style="text-align:center">Rest Day</p>
-                <p id="low_2" class="p" style="text-align:center">&nbsp;</p>
+                <p id="low_2" class="p" style="text-align:center"></p>
             </div>
             <div id="tuesdayCard" style="width:120%">
                 <div class="my-auto">
@@ -154,7 +154,7 @@
                     <img id="image_3" class="img-fluid" src="/images/Rest.png" alt="Today's Weather Icon">
                     <p id="icon_3" class="h4" style="text-align:center">Wednesday</p>
                     <p id="high_3" class="p" style="text-align:center">Rest Day</p>
-                    <p id="low_3" class="p" style="text-align:center">&nbsp;</p>
+                    <p id="low_3" class="p" style="text-align:center"></p>
                 </div>
                 <div id="wednesdayCard" style="width:120%">
                     <div class="my-auto">
@@ -195,7 +195,7 @@
                     <img id="image_4" class="img-fluid" src="/images/Rest.png" alt="Today's Weather Icon">
                     <p id="icon_4" class="h4" style="text-align:center">Thursday</p>
                     <p id="high_4" class="p" style="text-align:center">Rest Day</p>
-                    <p id="low_4" class="p" style="text-align:center">&nbsp;</p>
+                    <p id="low_4" class="p" style="text-align:center"></p>
                 </div>
                 <div id="thursdayCard" style="width:120%">
                     <div class="my-auto">
@@ -318,7 +318,7 @@
                         <img id="image_7" class="img-fluid" src="/images/Rest.png" alt="Today's Weather Icon">
                         <p id="icon_7" class="h4" style="text-align:center">Sunday</p>
                         <p id="high_7" class="p" style="text-align:center">Rest Day</p>
-                        <p id="low_7" class="p" style="text-align:center">&nbsp;</p>
+                        <p id="low_7" class="p" style="text-align:center"></p>
                     </div>
                     </ul>
                         <div id="sundayCard" style="width:120%">
@@ -554,6 +554,7 @@ for (i = 0; i < 7; i++) {
     document.getElementById(hs[i]).innerHTML="Teaching at";
     for (j = 0; j < 12; j++){
         if (dayhrs[i][j]==1){
+        document.getElementById(ls[i]).innerHTML+=hrs[j]+'  ';
         }
         else{
         var wid = week[i]+(j+1);
