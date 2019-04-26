@@ -28,10 +28,10 @@ passport.use(
             }
 
             //Check if user has verified their account via email
-            if(!user.verified){
-                console.log("Confirm Email to Login"); // User has not verified email
-                return done(null, false, { message: 'That email is not verified' });
-            }
+            //if(!user.verified){
+           //     console.log("Confirm Email to Login"); // User has not verified email
+            //    return done(null, false, { message: 'That email is not verified' });
+            //}
 
             // Match Password
             bcrypt.compare(password, user.password, (err, isMatch) => {
