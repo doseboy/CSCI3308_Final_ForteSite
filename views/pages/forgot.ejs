@@ -1,29 +1,28 @@
 <% include ../partials/header %>
 
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-        <div class="card card-body">
-            <h1><img class="img-fluid" src="/images/forteLogo.jpg" alt="LogoPic"></h1>
-            <% include ../partials/messages %>
-            <form action="/forgot" method="POST">
-                <div class="form-group">
-                    <label for="forgot">Enter Email for password reset:</label>
-                    <input
-                    type="email"
-                    id="forgot"
-                    name="forgot"
-                    class="form-control"
-                    placeholder="Enter Email"
-                    value="<%= typeof name != 'undefined' ? name : '' %>"
-                    />
-                </div>
-                <% if(loggedin) { %>
-                    <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email Again</button>
-                <% }
+
+<div class="col-md-6 m-auto testPadding">
+    <div class="card card-body mainCard">
+        <h1><img class="img-fluid center" src="/images/forteShortLogo.png" alt="LogoPic"></h1>
+        <h4 class="text-center mb-3">Change Password</h4>
+        <br>
+        <br>
+        <% include ../partials/messages %>
+        <form action="/forgot" method="POST">
+            <div class="form-group">
+                <label for="forgot">Enter Email to Receive Link:</label>
+                <input type="email" id="forgot" name="forgot" class="form-control" placeholder="Enter Email"
+                    value="<%= typeof name != 'undefined' ? name : '' %>" />
+            </div>
+            <% if(loggedin) { %>
+            <button type="submit" class="btn btn-secondary btn-block" id="send_email">Send Link to Email</button>
+            <% }
                     else { %>
-                    <button type="submit" class="btn btn-primary btn-block" id="send_email">Send Email Again</button>
-                <% } %>
-                <button type="submit" class="btn btn-secondary btn-block" id="send_email" formaction= "/login">Back to Login</button>
-            </form> 
-        </div>
- <% include ../partials/footer %>
+            <button type="submit" class="btn btn-secondary btn-block" id="send_email">Send Email</button>
+            <% } %>
+            <button type="submit" class="btn btn-primary btn-block" id="send_email" formaction="/login">Back to
+                Login</button>
+        </form>
+    </div>
+</div>
+<% include ../partials/footer %>
