@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<img src="../resources/img/forteLogo.jpg" height="300px" width="300px" max-height= "1000px" class="img-fluid" alt="Registration Page Header for Forte">
+  <div class="container">
+    <div class='row'>
+      <div class="col-4">
+        <p>Name:
+            <% if(name) { %>
+			    <%- name %>
+			<% } %>
+        </p>
+        <p>Instrument:
+          <%- instrument %>
+        </p>
+      </div>
+      <div class="col-8">
+
+      </div>
+    </div>
+  </div>
+
+
+<% include ../partials/footer %>
