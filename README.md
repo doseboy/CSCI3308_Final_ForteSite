@@ -5,10 +5,10 @@ Forte is a web application designed to make finding local music teachers and stu
 ## File Structure
 __Project Folders__
 
-_database_: A folder used for passing notes about the Database structure,
+_db_code_: A folder used for passing notes about the Database structure,
 however, it is not essential for the app and was used to convey information via text files
 
-_resources_: The _resources_ folder contains the _css_, _img_ and _js_ folders. The _css_ folder contains all styling for the project that was not completed using Bootstrap. The _img_ folder contains all images, banners, and logos for the project. The _js_ folder contains the scripts necessary for database interaction.
+_public_: The _resources_ folder contains the _css_ and _images_ folders. The _css_ folder contains all styling for the project that was not completed using Bootstrap. The _images_ folder contains all images, banners, and logos for the project.
 
 _views_: The _views_ folder contains two folders - _pages_ and _partials_. The _pages_ folder contains the EJS views of every page in the project. The _partials_ folder holds a universal header, footer, and message that all of the pages reference.  
 
